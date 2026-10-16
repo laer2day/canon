@@ -1,0 +1,16 @@
+[
+  { "notation": "meridian.nav.primary", "instance": null, "rank": null, "accessibleName": "Primary", "lang": "en", "dir": "ltr", "fellBack": false },
+  { "notation": "meridian.link.nav", "instance": "route-product", "rank": null, "accessibleName": "Product", "lang": "en", "dir": "ltr", "fellBack": false },
+  { "notation": "meridian.link.nav", "instance": "route-pricing", "rank": null, "accessibleName": "Pricing", "lang": "en", "dir": "ltr", "fellBack": false },
+  { "notation": "meridian.link.nav", "instance": "route-customers", "rank": null, "accessibleName": "Customers", "lang": "en", "dir": "ltr", "fellBack": false },
+  { "notation": "meridian.button.get-demo", "instance": null, "rank": null, "accessibleName": "Get a Demo", "lang": "en", "dir": "ltr", "fellBack": false },
+  { "notation": "meridian.link.overview", "instance": null, "rank": null, "accessibleName": "Watch overview", "lang": "en", "dir": "ltr", "fellBack": false },
+  { "notation": "meridian.card.plan", "instance": "sku-starter", "rank": null, "accessibleName": "Starter", "lang": "en", "dir": "ltr", "fellBack": false },
+  { "notation": "meridian.card.plan", "instance": "sku-growth", "rank": null, "accessibleName": "Growth", "lang": "en", "dir": "ltr", "fellBack": false },
+  { "notation": "meridian.card.plan", "instance": "sku-enterprise", "rank": null, "accessibleName": "Enterprise", "lang": "en", "dir": "ltr", "fellBack": false },
+  { "notation": "meridian.list.result", "instance": null, "rank": 1, "accessibleName": "October release", "lang": "en", "dir": "ltr", "fellBack": false },
+  { "notation": "meridian.list.result", "instance": null, "rank": 2, "accessibleName": "Status page", "lang": "en", "dir": "ltr", "fellBack": false },
+  { "notation": "meridian.form.request-demo", "instance": null, "rank": null, "accessibleName": "Request a demo", "lang": "en", "dir": "ltr", "fellBack": false },
+  { "notation": "meridian.button.submit", "instance": null, "rank": null, "accessibleName": "Submit", "lang": "en", "dir": "ltr", "fellBack": false },
+  { "notation": "meridian.link.enterprise", "instance": null, "rank": null, "accessibleName": "Contact enterprise", "lang": "en", "dir": "ltr", "fellBack": false }
+]

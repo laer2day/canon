@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/semantic-surface-taxonomy/canon.schema.json",
+  "title": "Semantic surface canon",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["canon", "prefix", "defaultLocale", "locales", "concepts"],
+  "properties": {
+    "canon": { "type": "string", "minLength": 1 },
+    "prefix": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" },
+    "defaultLocale": { "type": "string", "minLength": 1 },
+    "locales": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["tag", "dir"],
+        "properties": {
+          "tag": { "type": "string", "minLength": 1 },
+          "dir": { "enum": ["ltr", "rtl"] },
+          "fallback": { "type": "string" }
+        }
+      }
+    },
+    "capabilities": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "notation"],
+        "properties": {
+          "name": { "type": "string", "pattern": "^[a-z][a-z0-9_]*$" },
+          "notation": { "type": "string" }
+        }
+      }
+    },
+    "concepts": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/concept" }
+    }
+  },
+  "$defs": {
+    "labels": {
+      "type": "object",
+      "additionalProperties": { "type": "string", "minLength": 1 },
+      "required": ["en"]
+    },
+    "concept": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["notation", "cardinality", "prefLabel"],
+      "properties": {
+        "notation": { "type": "string", "maxLength": 50 },
+        "cardinality": { "enum": ["singleton", "repeating"] },
+        "namedBy": { "enum": ["visible", "aria", "labelledby"] },
+        "ephemeral": { "type": "boolean" },
+        "deprecated": { "type": "boolean" },
+        "replacedBy": { "type": "string" },
+        "prefLabel": { "$ref": "#/$defs/labels" },
+        "instances": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "stability", "name"],
+            "properties": {
+              "id": { "type": "string", "maxLength": 50 },
+              "stability": { "enum": ["record", "slug"] },
+              "name": { "$ref": "#/$defs/labels" },
+              "detail": { "$ref": "#/$defs/labels" }
+            }
+          }
+        }
+      }
+    }
+  }
+}

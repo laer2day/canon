@@ -1,0 +1,37 @@
+{
+  "id": "meridian-home",
+  "parts": [
+    { "notation": "meridian.nav.primary", "instance": null, "place": "nav", "element": "nav", "role": "navigation", "component": "nav" },
+    { "notation": "meridian.link.nav", "instance": "route-product", "place": "nav", "element": "a", "role": "link", "component": "link" },
+    { "notation": "meridian.link.nav", "instance": "route-pricing", "place": "nav", "element": "a", "role": "link", "component": "link" },
+    { "notation": "meridian.link.nav", "instance": "route-customers", "place": "nav", "element": "a", "role": "link", "component": "link" },
+    { "notation": "meridian.button.get-demo", "instance": null, "place": "hero", "element": "a", "role": "button", "component": "button" },
+    { "notation": "meridian.link.overview", "instance": null, "place": "hero", "element": "a", "role": "link", "component": "link" },
+    { "notation": "meridian.card.plan", "instance": "sku-starter", "place": "plans", "element": "a", "role": "link", "component": "card" },
+    { "notation": "meridian.card.plan", "instance": "sku-growth", "place": "plans", "element": "a", "role": "link", "component": "card" },
+    { "notation": "meridian.card.plan", "instance": "sku-enterprise", "place": "plans", "element": "a", "role": "link", "component": "card" },
+    {
+      "notation": "meridian.list.result",
+      "instance": null,
+      "rank": 1,
+      "place": "results",
+      "element": "a",
+      "role": "link",
+      "component": "list-item",
+      "names": { "en": "October release", "fr": "Livraison d’octobre", "ar": "إصدار أكتوبر", "ja": "10月のリリース" }
+    },
+    {
+      "notation": "meridian.list.result",
+      "instance": null,
+      "rank": 2,
+      "place": "results",
+      "element": "a",
+      "role": "link",
+      "component": "list-item",
+      "names": { "en": "Status page", "fr": "Page d’état", "ar": "صفحة الحالة", "ja": "ステータスページ" }
+    },
+    { "notation": "meridian.form.request-demo", "instance": null, "place": "form", "element": "form", "role": "form", "component": "form" },
+    { "notation": "meridian.button.submit", "instance": null, "place": "form", "element": "button", "role": "button", "component": "button" },
+    { "notation": "meridian.link.enterprise", "instance": null, "place": "footer", "element": "a", "role": "link", "component": "link" }
+  ]
+}

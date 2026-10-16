@@ -1,0 +1,12 @@
+node_modules/
+.project_id
+.github_repo
+.env
+.env.*
+.vercel/
+screenshots/
+.node_modules.lock
+.grok/
+artifacts/
+attachments/
+

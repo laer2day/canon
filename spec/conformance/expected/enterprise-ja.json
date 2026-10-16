@@ -1,0 +1,10 @@
+{
+  "notation": "meridian.card.plan",
+  "instance": "sku-enterprise",
+  "accessibleName": "Enterprise",
+  "lang": "en",
+  "dir": "ltr",
+  "fellBack": true,
+  "elementLang": "en",
+  "elementDir": null
+}

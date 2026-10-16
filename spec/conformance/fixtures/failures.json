@@ -1,0 +1,74 @@
+[
+  {
+    "id": "visible-name-mismatch",
+    "locale": "en",
+    "surface": "web",
+    "notation": "meridian.card.plan",
+    "instance": "sku-growth",
+    "patch": { "accessibleName": "Plan", "ariaLabel": "Plan" },
+    "expectFail": ["name"]
+  },
+  {
+    "id": "redundant-aria-label",
+    "locale": "en",
+    "surface": "web",
+    "notation": "meridian.button.get-demo",
+    "instance": null,
+    "patch": { "ariaLabel": "Get a Demo" },
+    "expectFail": ["name"]
+  },
+  {
+    "id": "singleton-twice",
+    "locale": "en",
+    "surface": "web",
+    "notation": "meridian.button.get-demo",
+    "instance": null,
+    "extraParts": [{ "notation": "meridian.button.get-demo", "instance": null }],
+    "expectFail": ["instance"]
+  },
+  {
+    "id": "deprecated-emitted",
+    "locale": "en",
+    "surface": "web",
+    "notation": "meridian.link.demo",
+    "instance": null,
+    "extraParts": [{ "notation": "meridian.link.demo", "instance": null }],
+    "expectFail": ["deprecated"]
+  },
+  {
+    "id": "privacy-email",
+    "locale": "en",
+    "surface": "web",
+    "notation": "meridian.link.enterprise",
+    "instance": null,
+    "patch": { "visible": "ada@meridian.dev", "accessibleName": "ada@meridian.dev" },
+    "expectFail": ["privacy"]
+  },
+  {
+    "id": "version-mismatch",
+    "locale": "en",
+    "surface": "web",
+    "notation": "meridian.button.submit",
+    "instance": null,
+    "patch": { "version": "9.9.9" },
+    "expectFail": ["version"]
+  },
+  {
+    "id": "description-is-notation",
+    "locale": "en",
+    "surface": "headless",
+    "notation": "meridian.button.get-demo",
+    "instance": null,
+    "patch": { "description": "meridian.button.get-demo" },
+    "expectFail": ["name"]
+  },
+  {
+    "id": "lang-not-overridden",
+    "locale": "ja",
+    "surface": "web",
+    "notation": "meridian.card.plan",
+    "instance": "sku-enterprise",
+    "patch": { "lang": null },
+    "expectFail": ["lang"]
+  }
+]

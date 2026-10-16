@@ -1,0 +1,106 @@
+{
+  "canon": "0.1.0",
+  "prefix": "meridian",
+  "defaultLocale": "en",
+  "locales": [
+    { "tag": "en", "dir": "ltr" },
+    { "tag": "fr", "dir": "ltr", "fallback": "en" },
+    { "tag": "ar", "dir": "rtl", "fallback": "en" },
+    { "tag": "ja", "dir": "ltr", "fallback": "en" }
+  ],
+  "capabilities": [
+    { "name": "request_demo", "notation": "meridian.button.get-demo" },
+    { "name": "watch_overview", "notation": "meridian.link.overview" },
+    { "name": "open_plan", "notation": "meridian.card.plan" }
+  ],
+  "concepts": [
+    {
+      "notation": "meridian.nav.primary",
+      "cardinality": "singleton",
+      "namedBy": "aria",
+      "prefLabel": { "en": "Primary", "fr": "Principale", "ar": "الرئيسية", "ja": "メイン" }
+    },
+    {
+      "notation": "meridian.link.nav",
+      "cardinality": "repeating",
+      "namedBy": "visible",
+      "prefLabel": { "en": "Navigation link", "fr": "Lien de navigation", "ar": "رابط التنقل", "ja": "ナビゲーションリンク" },
+      "instances": [
+        { "id": "route-product", "stability": "record", "name": { "en": "Product", "fr": "Produit", "ar": "المنتج", "ja": "製品" } },
+        { "id": "route-pricing", "stability": "record", "name": { "en": "Pricing", "fr": "Tarifs", "ar": "الأسعار", "ja": "料金" } },
+        { "id": "route-customers", "stability": "record", "name": { "en": "Customers", "fr": "Clients", "ar": "العملاء", "ja": "導入事例" } }
+      ]
+    },
+    {
+      "notation": "meridian.button.get-demo",
+      "cardinality": "singleton",
+      "namedBy": "visible",
+      "prefLabel": { "en": "Get a Demo", "fr": "Obtenir une démo", "ar": "احصل على عرض", "ja": "デモを依頼" }
+    },
+    {
+      "notation": "meridian.link.overview",
+      "cardinality": "singleton",
+      "namedBy": "visible",
+      "prefLabel": { "en": "Watch overview", "fr": "Voir l’aperçu", "ar": "شاهد النظرة العامة", "ja": "概要を見る" }
+    },
+    {
+      "notation": "meridian.card.plan",
+      "cardinality": "repeating",
+      "namedBy": "visible",
+      "prefLabel": { "en": "Plan", "fr": "Offre", "ar": "خطة", "ja": "プラン" },
+      "instances": [
+        {
+          "id": "sku-starter",
+          "stability": "record",
+          "name": { "en": "Starter", "fr": "Essentiel", "ar": "الأساسي", "ja": "スターター" },
+          "detail": { "en": "One product surface.", "fr": "Une seule surface produit.", "ar": "سطح منتج واحد.", "ja": "製品サーフェスは一つ。" }
+        },
+        {
+          "id": "sku-growth",
+          "stability": "record",
+          "name": { "en": "Growth", "fr": "Croissance", "ar": "النمو", "ja": "グロース" },
+          "detail": { "en": "A team shipping every week.", "fr": "Une équipe qui livre chaque semaine.", "ar": "فريق يُصدر كل أسبوع.", "ja": "毎週リリースするチーム。" }
+        },
+        {
+          "id": "sku-enterprise",
+          "stability": "record",
+          "name": { "en": "Enterprise", "fr": "Entreprise", "ar": "المؤسسة" },
+          "detail": { "en": "More than one canon.", "fr": "Plus d’un canon.", "ar": "أكثر من معيار.", "ja": "複数のカノン。" }
+        }
+      ]
+    },
+    {
+      "notation": "meridian.list.result",
+      "cardinality": "repeating",
+      "ephemeral": true,
+      "namedBy": "visible",
+      "prefLabel": { "en": "Result", "fr": "Résultat", "ar": "نتيجة", "ja": "結果" }
+    },
+    {
+      "notation": "meridian.form.request-demo",
+      "cardinality": "singleton",
+      "namedBy": "labelledby",
+      "prefLabel": { "en": "Request a demo", "fr": "Demander une démo", "ar": "اطلب عرضاً", "ja": "デモを依頼する" }
+    },
+    {
+      "notation": "meridian.button.submit",
+      "cardinality": "singleton",
+      "namedBy": "visible",
+      "prefLabel": { "en": "Submit", "fr": "Envoyer", "ar": "إرسال", "ja": "送信" }
+    },
+    {
+      "notation": "meridian.link.enterprise",
+      "cardinality": "singleton",
+      "namedBy": "visible",
+      "prefLabel": { "en": "Contact enterprise", "fr": "Contacter l’entreprise", "ar": "تواصل مع المؤسسة" }
+    },
+    {
+      "notation": "meridian.link.demo",
+      "cardinality": "singleton",
+      "deprecated": true,
+      "replacedBy": "meridian.button.get-demo",
+      "namedBy": "visible",
+      "prefLabel": { "en": "Demo" }
+    }
+  ]
+}
