@@ -1,5 +1,7 @@
 # Semantic Surface Taxonomy
 
+You're not naming buttons. You're naming one button twice and paying for it forever. Canon is the layer where you name it once.
+
 A vendor-neutral method for naming interactive parts so that people, assistive technologies, analytics, tests, and agents resolve the same identities.
 
 This is a specification and a thin format. It is not a library, a framework, or a runtime. No package is published. Conformance does not require shared code.
