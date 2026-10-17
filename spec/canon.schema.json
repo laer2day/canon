@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://example.invalid/semantic-surface-taxonomy/canon.schema.json",
+  "$id": "https://raw.githubusercontent.com/laer2day/canon/main/spec/canon.schema.json",
   "title": "Semantic surface canon",
   "type": "object",
   "additionalProperties": false,
