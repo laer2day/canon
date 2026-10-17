@@ -1,0 +1,113 @@
+{
+  "canon": "vercel-commerce",
+  "prefix": "vercel-commerce",
+  "defaultLocale": "en",
+  "locales": [
+    {"tag": "en", "dir": "ltr"}
+  ],
+  "capabilities": [
+    {"name": "web", "notation": "https://www.w3.org/TR/wai-aria-1.2/"},
+    {"name": "ios", "notation": "https://developer.apple.com/documentation/uikit/uiaccessibilityidentification"},
+    {"name": "android", "notation": "https://developer.android.com/reference/androidx/compose/ui/Modifier#testTag(androidx.compose.ui.Modifier,kotlin.String)"}
+  ],
+  "concepts": [
+    {
+      "notation": "vercel-commerce.nav.logo",
+      "cardinality": "singleton",
+      "namedBy": "visible",
+      "prefLabel": {"en": "Site logo and name"}
+    },
+    {
+      "notation": "vercel-commerce.nav.menu-link",
+      "cardinality": "repeating",
+      "namedBy": "visible",
+      "prefLabel": {"en": "Header navigation link"},
+      "instances": "dynamic — sourced from Shopify menu 'next-js-frontend-header-menu' at runtime; not enumerable in a static canon"
+    },
+    {
+      "notation": "vercel-commerce.nav.search",
+      "cardinality": "singleton",
+      "namedBy": "aria",
+      "prefLabel": {"en": "Search"}
+    },
+    {
+      "notation": "vercel-commerce.nav.open-cart",
+      "cardinality": "singleton",
+      "namedBy": "aria",
+      "prefLabel": {"en": "Open cart"}
+    },
+    {
+      "notation": "vercel-commerce.product.add-to-cart",
+      "cardinality": "singleton",
+      "namedBy": "visible",
+      "prefLabel": {"en": "Add to cart"},
+      "generator_flags": [
+        "NAMEDBY_CONFLICT: SubmitButton renders three states from one component. Disabled 'Out Of Stock' state has no aria-label. Disabled 'Please select an option' state sets aria-label='Please select an option' while visible text remains 'Add To Cart' — violates the accessible-name policy that aria-label must contain visible text when visible text is absent. Active state aria-label='Add to cart' matches visible text. Fix: derive accessible name from visible text in all states, or use aria-labelledby."
+      ]
+    },
+    {
+      "notation": "vercel-commerce.product.variant-option",
+      "cardinality": "repeating",
+      "namedBy": "visible",
+      "prefLabel": {"en": "Product variant option value (e.g. color, size)"},
+      "generator_flags": [
+        "STABILITY_DOWNGRADE: stable variant IDs (gid://shopify/ProductVariant/...) live in the Shopify data layer and never reach the DOM. No data-instance source exists. Defaulting to slug stability on option value text, which Canon treats as weaker than record stability. Recommend emitting data-instance from variant.id."
+      ]
+    },
+    {
+      "notation": "vercel-commerce.product.gallery-image",
+      "cardinality": "repeating",
+      "namedBy": "aria",
+      "prefLabel": {"en": "Product gallery image"}
+    },
+    {
+      "notation": "vercel-commerce.product.related-link",
+      "cardinality": "repeating",
+      "namedBy": "slug",
+      "prefLabel": {"en": "Related product link"},
+      "instances": "dynamic — sourced from getProductRecommendations(product.id) at runtime; slug stability from product.handle"
+    },
+    {
+      "notation": "vercel-commerce.cart.open",
+      "cardinality": "singleton",
+      "namedBy": "aria",
+      "ephemeral": true,
+      "prefLabel": {"en": "Open cart"}
+    },
+    {
+      "notation": "vercel-commerce.cart.close",
+      "cardinality": "singleton",
+      "namedBy": "aria",
+      "ephemeral": true,
+      "prefLabel": {"en": "Close cart"}
+    },
+    {
+      "notation": "vercel-commerce.cart.delete-line",
+      "cardinality": "repeating",
+      "ephemeral": true,
+      "namedBy": "aria",
+      "prefLabel": {"en": "Delete line item"}
+    },
+    {
+      "notation": "vercel-commerce.cart.quantity-minus",
+      "cardinality": "repeating",
+      "ephemeral": true,
+      "namedBy": "aria",
+      "prefLabel": {"en": "Decrease quantity"}
+    },
+    {
+      "notation": "vercel-commerce.cart.quantity-plus",
+      "cardinality": "repeating",
+      "ephemeral": true,
+      "namedBy": "aria",
+      "prefLabel": {"en": "Increase quantity"}
+    },
+    {
+      "notation": "vercel-commerce.cart.checkout",
+      "cardinality": "singleton",
+      "ephemeral": true,
+      "namedBy": "visible",
+      "prefLabel": {"en": "Proceed to checkout"}
+    }
+  ]
+}
