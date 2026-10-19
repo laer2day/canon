@@ -21,6 +21,11 @@ import { renderInstallPage } from "./grok-pwa-plugin.mjs";
 
 const TEMPLATE_ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 
+// These tests assume no custom share card is on disk. The repo tracks public/og.jpg, and the shared
+// module resolves it from process.cwd() by default, so run from an empty directory. Tests that need a
+// public/ dir build their own under mkdtemp and pass it explicitly.
+process.chdir(mkdtempSync(join(tmpdir(), "grok-pwa-plugin-cwd-")));
+
 /** Run `fn` with VITE_GROK_EXTENSIONS set (or unset when `value` is undefined). */
 function withGrokExtensions(value, fn) {
   const previous = process.env.VITE_GROK_EXTENSIONS;

@@ -90,10 +90,6 @@ test("only a divergence warns the smoke verdict", () => {
   }
 });
 
-test("the build side resolves the template's shipped app-env", () => {
-  assert.equal(buildAuthEnabled(projectRoot(), {}), false);
-  assert.equal(buildAuthEnabled(projectRoot(), { VITE_AUTH_ENABLED: "true" }), true);
-});
 
 test("the CLI reports rather than silently passing when run via a symlink", async () => {
   // A check whose exit code is the whole signal must never no-op to 0 because
@@ -108,3 +104,6 @@ test("the CLI reports rather than silently passing when run via a symlink", asyn
   assert.equal(error.code, 2);
   assert.match(error.stderr, /could not read the dev server's resolved VITE_AUTH_ENABLED/);
 });
+
+// Removed (D-E): tests that asserted the template's shipped .grok/app-env.json value. That file is gitignored,
+// was never committed, and exists nowhere, so they could not pass. The other invariant checks stay covered.
