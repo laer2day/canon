@@ -31,4 +31,4 @@ The suite reads the canon and the fixtures. It fails a surface that repeats a si
 
 The page in this workspace is a non-normative demonstration. It imports `spec/canons/meridian.json` rather than keeping a second copy of the vocabulary.
 
-The surrounding app scaffold — authentication, database migrations, the install page, and `AGENTS.md` — is how this workspace runs a preview. It is not part of the specification.
+The surrounding app scaffold — authentication, database migrations, and the install page — is how this workspace runs a preview. It is not part of the specification.

@@ -21,33 +21,60 @@ import { renderInstallPage } from "./grok-pwa-plugin.mjs";
 
 const TEMPLATE_ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 
+/** Run `fn` with VITE_GROK_EXTENSIONS set (or unset when `value` is undefined). */
+function withGrokExtensions(value, fn) {
+  const previous = process.env.VITE_GROK_EXTENSIONS;
+  if (value === undefined) delete process.env.VITE_GROK_EXTENSIONS;
+  else process.env.VITE_GROK_EXTENSIONS = value;
+  try {
+    return fn();
+  } finally {
+    if (previous === undefined) delete process.env.VITE_GROK_EXTENSIONS;
+    else process.env.VITE_GROK_EXTENSIONS = previous;
+  }
+}
+
 test("injects before </head>", () => {
   const out = injectGrokPwaHead("<html><head><title>x</title></head><body></body></html>");
   assert.match(out, /rel="manifest"/);
   assert.match(out, /apple-touch-icon/);
-  assert.match(out, /grok-app-builder\/extensions\.js/);
   assert.ok(out.indexOf("manifest") < out.indexOf("</head>"));
 });
 
-test("injects the extensions script without a project id", () => {
-  const out = injectGrokPwaHead("<html><head></head></html>", {
-    appName: "Demo",
-    projectId: "",
+test("omits the extensions script by default", () => {
+  withGrokExtensions(undefined, () => {
+    const out = injectGrokPwaHead("<html><head></head></html>", {
+      appName: "Demo",
+      projectId: "proj-123",
+    });
+    assert.doesNotMatch(out, /grok-app-builder\/extensions\.js/);
+    assert.doesNotMatch(out, /data-project-id/);
   });
-  assert.match(out, /src="https:\/\/grok\.com\/grok-app-builder\/extensions\.js" defer/);
-  assert.doesNotMatch(out, /grok-project-id/);
-  assert.doesNotMatch(out, /data-project-id/);
-  assert.doesNotMatch(out, /property="grok:app_id"/);
+});
+
+test("injects the extensions script without a project id", () => {
+  withGrokExtensions("1", () => {
+    const out = injectGrokPwaHead("<html><head></head></html>", {
+      appName: "Demo",
+      projectId: "",
+    });
+    assert.match(out, /src="https:\/\/grok\.com\/grok-app-builder\/extensions\.js" defer/);
+    assert.doesNotMatch(out, /grok-project-id/);
+    assert.doesNotMatch(out, /data-project-id/);
+    assert.doesNotMatch(out, /property="grok:app_id"/);
+  });
 });
 
 test("injects project id on the script and meta when provided", () => {
-  const out = injectGrokPwaHead("<html><head></head></html>", {
-    appName: "Demo",
-    projectId: "proj-123",
+  withGrokExtensions("1", () => {
+    const out = injectGrokPwaHead("<html><head></head></html>", {
+      appName: "Demo",
+      projectId: "proj-123",
+    });
+    assert.match(out, /name="grok-project-id" content="proj-123"/);
+    assert.match(out, /data-project-id="proj-123"/);
+    assert.match(out, /property="grok:app_id" content="proj-123"/);
   });
-  assert.match(out, /name="grok-project-id" content="proj-123"/);
-  assert.match(out, /data-project-id="proj-123"/);
-  assert.match(out, /property="grok:app_id" content="proj-123"/);
 });
 
 test("does not duplicate grok:app_id", () => {
@@ -416,11 +443,13 @@ test("keeps the extensions script on commercial when the deployer enables it", (
 });
 
 test("does not duplicate the extensions script", () => {
-  const ctx = { appName: "Demo", projectId: "proj-123" };
-  const once = injectGrokPwaHead("<html><head></head></html>", ctx);
-  const twice = injectGrokPwaHead(once, ctx);
-  assert.equal(once, twice);
-  assert.equal(twice.split("extensions.js").length - 1, 1);
+  withGrokExtensions("1", () => {
+    const ctx = { appName: "Demo", projectId: "proj-123" };
+    const once = injectGrokPwaHead("<html><head></head></html>", ctx);
+    const twice = injectGrokPwaHead(once, ctx);
+    assert.equal(once, twice);
+    assert.equal(twice.split("extensions.js").length - 1, 1);
+  });
 });
 
 test("is idempotent", () => {

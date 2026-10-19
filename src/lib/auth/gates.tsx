@@ -81,8 +81,7 @@ export function SignInButtons() {
 }
 
 /**
- * Minimal signed-in identity chip + sign-out. Restyle freely (see the
- * `design-ui` skill). Sign-out is only shown when auth is enabled (the
+ * Minimal signed-in identity chip + sign-out. Restyle freely. Sign-out is only shown when auth is enabled (the
  * disabled-auth dev user has nothing to sign out of) and the session is not
  * gate-materialized — behind the gate the next request signs the viewer
  * straight back in, so a sign-out control there is a broken loop.
