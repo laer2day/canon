@@ -24,7 +24,7 @@ A Fullstory-first surface decorates elements so Fullstory can search, group and 
 | Instance | instance id | element property | `data-instance` plus schema entry | `FS.setAttribute(view, "data-instance", id)` plus schema | same as iOS |
 | Property typing | n/a | schema | `data-fs-properties-schema='{"data-instance":{"type":"str","name":"instance"}}'` | `FS.setAttribute(view, "data-fs-properties-schema", json)` | same as iOS |
 | Screen / page | surface id | page name | `FS('setProperties', {type:'page', ...})` | `FS.page(withName:properties:).start()` | `FS.page(name, props).start()` |
-| Privacy | no personal data in labels or properties | classification, mask, exclude | `data-fs-classification`, `fs-mask`, `fs-exclude` | `FS.addClass`, `data-fs-classification` | same as iOS |
+| Privacy | no personal data in labels or properties | classification, mask, exclude | `data-fs-classification`, `fs-mask`, `fs-exclude` | `FS.addClass` (class `fs-mask`, `fs-exclude`, `fs-unmask`), `data-fs-classification` | `FS.mask(view)`, `FS.unmask(view)`, `FS.exclude(view)` (a different API from iOS; per fs-skills `fullstory-privacy-controls/SKILL-MOBILE.md`, not tested) |
 
 Rules that follow from the map:
 
@@ -41,7 +41,7 @@ Fullstory's stable-selector guide recommends five attributes. Canon already cove
 | Fullstory convention | Canon position | Plugin decision |
 |---|---|---|
 | `data-component` (type, e.g. `button`) | Encoded in the notation's middle segment | Do not emit. The type is derivable from the notation. |
-| `data-id` (instance) | **Forbidden** by spec §3.1 | Do not emit. Use `data-instance`. If a surface already emits `data-id` for another purpose, leave it alone and never put the instance in it. |
+| `data-id` (instance) | Spec §3.1: the specification does not use `data-id`; the instance identifier goes in `data-instance` and must not be stored in `data-id`. The attribute itself is not forbidden. | Emit the instance as `data-instance`. A surface may keep `data-id` for its own purposes, but never with the instance identifier in it. |
 | `data-section` | Not an emission. The surface fragment has `place`. | Optional, Fullstory-only. May be added as a plain attribute. It is never a substitute for the notation. |
 | `data-position` | Rank for ephemeral items (spec §1.3) | Emit only for ephemeral or ranked lists, as `data-rank`. Do not use it to identify a record. |
 | `data-state` | Not in Canon | Fullstory-only. Allowed. State must not appear in the notation. |
@@ -80,7 +80,7 @@ A surface conforms to this plugin when, in addition to spec §8:
 - No `data-fs-element` value is Title Case copy, a visible label, or a notation plus instance.
 - Elements with an instance carry it as a property and not in the name.
 - No Fullstory attribute, page property or element property contains personal data.
-- The surface starts and ends a Fullstory page per screen where the platform has the concept (iOS, Android).
+- The surface starts a Fullstory page per screen where the platform has the concept (iOS, Android). Ending a page is optional: per fs-skills it is only needed to leave a section of the app without a defined page.
 - Disabling the Fullstory SDK leaves every canon attribute in place.
 
 ## 7. Open questions (not yet verified)
