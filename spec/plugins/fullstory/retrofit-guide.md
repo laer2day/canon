@@ -44,6 +44,8 @@ Fullstory names are consumed outside the code. Before changing any, list the dep
 - Fullstory searches, segments, metrics, funnels and dashboards that filter on the element name.
 - Automation that selects by name (test suites, bots, scripted agents).
 - Downstream exports that group by element name.
+- Element definitions in Fullstory that are keyed to an **id or role selector** (for example `#some-id` or `[role=menuitem]`) and not to `data-fs-element`. These depend on the surface's ids and roles, so an attribute-only inventory misses them. See README section 8.
+- Names the surface generates for itself at runtime, such as a form helper that sets a generic type name on every select. A definition keyed to a generated name has no line of source beside the element that explains it, so search the code for helpers that call `setAttribute` or build attribute objects, not only for the attribute written in markup.
 
 This step needs access to the Fullstory org and to the test code. If it cannot be done, treat every legacy name as depended upon.
 
