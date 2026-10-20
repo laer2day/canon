@@ -15,6 +15,7 @@ This is a specification and a thin format. It is not a library, a framework, or 
 | [spec/canons/meridian.json](spec/canons/meridian.json) | Non-normative example canon |
 | [spec/surfaces/meridian-home.json](spec/surfaces/meridian-home.json) | Non-normative surface fragment |
 | [spec/conformance/](spec/conformance/) | Fixtures and expected resolutions |
+| [spec/plugins/fullstory/](spec/plugins/fullstory/README.md) | Non-normative binding for surfaces that run Fullstory, plus a [retrofit guide](spec/plugins/fullstory/retrofit-guide.md) |
 | [LICENSE](LICENSE) | MIT |
 
 `spec/semantic-surface-taxonomy.md` is the specification. An earlier engine proposal is not part of this repository. Where an older note disagrees with the spec, the spec wins.
