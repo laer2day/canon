@@ -6,7 +6,7 @@
 
 Canon names the part. Fullstory records the part. This plugin says how the two line up so a surface does the work once.
 
-For step-by-step adoption, see [retrofit-guide.md](retrofit-guide.md).
+For step-by-step adoption, see [retrofit-guide.md](retrofit-guide.md). The plugin's manifest is [plugin.json](plugin.json); what a plugin is and must do is defined in [../CONTRACT.md](../CONTRACT.md).
 
 ## 1. Principle: Canon owns identity, Fullstory consumes it
 

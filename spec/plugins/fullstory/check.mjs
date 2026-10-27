@@ -4,7 +4,8 @@
 // This is the Fullstory plugin's "check" entry point for drift detection. It exists so the gap is visible
 // and cannot be mistaken for a passing check: it always exits 2 and says so. It never reports success.
 // usage: node spec/plugins/fullstory/check.mjs [anything]
-// Exit 2 always (not implemented). Exit 0 is reserved for a real check that has been shown to fail first.
+// Exit 2 always (not implemented). A real check uses 0 (no drift) and 1 (drift); see spec/plugins/CONTRACT.md.
+// It may report 0 only after it has been shown to exit non-zero on a known-bad input.
 //
 // What Wave 3 has to build here (requirements recorded 2026-10-20; none of it is decided design):
 //   1. Discovery by declaration: a `plugins` entry in the canon or surface file names this plugin. Fail closed

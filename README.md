@@ -15,6 +15,7 @@ This is a specification and a thin format. It is not a library, a framework, or 
 | [spec/canons/meridian.json](spec/canons/meridian.json) | Non-normative example canon |
 | [spec/surfaces/meridian-home.json](spec/surfaces/meridian-home.json) | Non-normative surface fragment |
 | [spec/conformance/](spec/conformance/) | Fixtures and expected resolutions |
+| [spec/plugins/CONTRACT.md](spec/plugins/CONTRACT.md) | Draft, non-normative contract for plugins that derive a vendor structure from a canon, with a manifest schema |
 | [spec/plugins/fullstory/](spec/plugins/fullstory/README.md) | Non-normative binding for surfaces that run Fullstory, plus a [retrofit guide](spec/plugins/fullstory/retrofit-guide.md) |
 | [LICENSE](LICENSE) | MIT |
 

@@ -1,0 +1,74 @@
+{
+  "plugin": "fullstory",
+  "contract": "0.1",
+  "vendor": "Fullstory",
+  "derives": ["element-name", "property-schema", "page-name"],
+  "platforms": ["web", "ios", "android"],
+  "check": {
+    "entry": "check.mjs",
+    "status": "stub",
+    "layers": []
+  },
+  "claims": [
+    {
+      "text": "On web, an element is named with the data-fs-element attribute.",
+      "evidence": "documented",
+      "where": "fullstorydev/fs-skills core/fullstory-element-properties/SKILL-WEB.md"
+    },
+    {
+      "text": "On iOS and Android, an element is named with FS.setAttribute(view, \"data-fs-element\", name).",
+      "evidence": "documented",
+      "where": "fullstorydev/fs-skills core/fullstory-element-properties/SKILL-IOS.md and SKILL-ANDROID.md"
+    },
+    {
+      "text": "A property schema must be set after the attribute values it describes.",
+      "evidence": "documented",
+      "where": "fullstorydev/fs-skills core/fullstory-element-properties/SKILL-IOS.md"
+    },
+    {
+      "text": "Android privacy uses FS.mask, FS.unmask and FS.exclude; iOS uses classes via FS.addClass.",
+      "evidence": "documented",
+      "where": "fullstorydev/fs-skills core/fullstory-privacy-controls/SKILL-MOBILE.md"
+    },
+    {
+      "text": "Ending a page is optional on iOS and Android.",
+      "evidence": "documented",
+      "where": "fullstorydev/fs-skills core/fullstory-page-properties/SKILL-ANDROID.md"
+    },
+    {
+      "text": "An element name stays attached to its element while its display name can change.",
+      "evidence": "documented",
+      "where": "fs-skills element-properties SKILL.md; found by search, never tested"
+    },
+    {
+      "text": "Real org data can be keyed to names a surface generates at runtime (a generic helper name was found as an element definition).",
+      "evidence": "observed",
+      "where": "one read-only org search of the CarGo demo org; existence only, no usage data"
+    },
+    {
+      "text": "A live read through the org search tool returns one name field per element, with no separate display name.",
+      "evidence": "observed",
+      "where": "one read-only org search of the CarGo demo org"
+    },
+    {
+      "text": "A Jetpack Compose element can be given a Fullstory element name.",
+      "evidence": "design",
+      "where": "unknown: FS.setAttribute takes a View; no Compose example found; test required before any normative claim"
+    },
+    {
+      "text": "Fullstory reads accessibilityIdentifier or testTag by itself.",
+      "evidence": "design",
+      "where": "not stated in any skill; treated as false until tested"
+    },
+    {
+      "text": "The Fullstory element name should equal the canon notation.",
+      "evidence": "design",
+      "where": "Lane decided this as Q1 on 2026-10-20; the display-name part is untested"
+    },
+    {
+      "text": "Renaming an element does not break saved searches, metrics or dashboards.",
+      "evidence": "design",
+      "where": "undocumented and untested; a non-production test is required"
+    }
+  ]
+}

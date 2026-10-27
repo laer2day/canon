@@ -1,0 +1,73 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/laer2day/canon/main/spec/plugins/plugin.schema.json",
+  "title": "Canon plugin manifest (DRAFT, non-normative)",
+  "description": "Describes one plugin that derives a vendor-specific structure from a canon. Standalone: it does not extend canon.schema.json, which is normative and closed (additionalProperties: false).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["plugin", "contract", "vendor", "derives", "platforms", "check", "claims"],
+  "properties": {
+    "plugin": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]*$",
+      "description": "Plugin id. Must equal the name of the directory that holds this manifest."
+    },
+    "contract": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+$",
+      "description": "Version of CONTRACT.md this manifest was written against."
+    },
+    "vendor": { "type": "string", "minLength": 1 },
+    "derives": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" },
+      "description": "Kinds of vendor structure the plugin derives from a canon, e.g. element-name, property-schema."
+    },
+    "platforms": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "enum": ["web", "ios", "android", "headless"] }
+    },
+    "check": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["entry", "status"],
+      "properties": {
+        "entry": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._/-]+$",
+          "description": "Path of the plugin's check entry point, relative to the plugin directory."
+        },
+        "status": {
+          "enum": ["stub", "implemented"],
+          "description": "A stub must exit 2 and must never exit 0. Only an implemented check that has been shown to fail on bad input may report 'implemented'."
+        },
+        "layers": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "enum": ["static", "live"] },
+          "description": "Which layers the check covers. A live layer may only be weaker than the static one."
+        }
+      }
+    },
+    "claims": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["text", "evidence"],
+        "properties": {
+          "text": { "type": "string", "minLength": 1 },
+          "evidence": {
+            "enum": ["tested", "documented", "observed", "design"],
+            "description": "tested = run and shown to pass and fail; documented = stated in a vendor document, not run; observed = seen in one real read; design = a proposal with no evidence."
+          },
+          "where": { "type": "string" }
+        }
+      },
+      "description": "Every behavioural claim the plugin makes about the vendor, with how it is known."
+    }
+  }
+}
