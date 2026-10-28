@@ -58,6 +58,7 @@ Three layers, never merged: **concept** (a notation, immutable once published), 
 | `spec/canon.schema.json` | normative schema for a canon |
 | `spec/canons/` | canons (`meridian.json` is a non-normative example) |
 | `spec/surfaces/`, `spec/conformance/` | surface fragments, fixtures, expected resolutions |
+| `spec/GLOSSARY.md` | the project's words in plain language (notation, cardinal, instance, binding and more); start here if a term is unfamiliar (draft, non-normative) |
 | `spec/SURFACE-CONTRACT.md` | the watermark: how a surface declares it is canon-governed, and how a visiting agent treats that claim (draft, non-normative) |
 | `spec/plugins/CONTRACT.md` | what a plugin is and must do (draft, non-normative) |
 | `spec/plugins/<id>/` | one directory per plugin: `plugin.json`, a `check` entry point, its docs |
