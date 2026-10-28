@@ -20,7 +20,7 @@ An interactive thing on a digital product, such as a "Get a Demo" button, should
 
 ## What a thing is called
 
-**Cardinal** *(planned name for "concept"; the specification still says "concept")*. The one universal identity for a thing across all surfaces. "The Get a Demo button" is a cardinal. A cardinal may appear in many places on many surfaces, and it is the same thing in all of them. *(Lane's words, relayed.)*
+**Cardinal** *(planned name for "concept"; the specification still says "concept")*. A universal identity for a thing that can exist in multiple locations and across multiple surfaces. Anywhere it exists, it is the same thing. "The Get a Demo button" is a cardinal. *(Lane, first-hand, 2026-10-28.)*
 
 **Notation.** The cardinal's name as a computer reads it: a short, fixed piece of text such as `meridian.button.get-demo`. It is lowercase, has no spaces, and starts with a prefix that belongs to the product so that two products can never clash. **A notation is never changed once it is published.** If a better name is wanted, the old one is retired and points to a new one; it is not edited. A notation is a name for machines. It is not what a person reads.
 
@@ -36,8 +36,8 @@ An interactive thing on a digital product, such as a "Get a Demo" button, should
 
 **Binding.** Where a cardinal is actually written onto a surface, for example the attribute on a web page or the identifier in an app. Bindings are kept in a **separate file for each surface, outside the specification** *(Lane's decision, relayed)*. The specification already says, in a note, that a team may produce "surface bindings" as local files. A binding as defined here is that idea made specific.
 
-**CardinalCollege.** *(Lane's words, relayed:)* the place where all the cardinals' identities are stored.
-> **OPEN, Lane's to answer:** is CardinalCollege the same thing as today's canon file (`spec/canons/<name>.json`) under a new name, or a new construct that holds or sits above canon files? Nothing in this glossary assumes either answer, and nothing more is said about CardinalCollege than the sentence above.
+**CardinalCollege.** The file that holds the cardinals, as a single source-of-truth list for all surfaces. *(Lane, first-hand, 2026-10-28.)* So it is a file, and there is one list that every surface draws on.
+> **STILL OPEN, Lane's to answer:** is that file today's canon file (`spec/canons/<name>.json`) under a new name, or a different file? Today's canon file also holds the cardinals (the specification calls them concepts), so the two may be the same thing, but Lane has not said so and this glossary does not assume it. Nothing more is said about CardinalCollege than the sentence above.
 
 ---
 
@@ -69,6 +69,6 @@ This uses the example canon in `spec/canons/meridian.json`, which is a made-up p
 ## What this glossary does not claim
 
 - It does not rename anything in the specification, the schema or any canon. "Concept" is still the word in all of them.
-- It does not define what CardinalCollege is beyond the one sentence above.
+- It does not say whether CardinalCollege is the same file as today's canon file. See the open line above.
 - It does not describe how bindings or element locations are stored. That is a decision for a later document.
 - It is a draft. Check any term against the specification before relying on it for a precise question.
