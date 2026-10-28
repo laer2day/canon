@@ -37,7 +37,8 @@ An interactive thing on a digital product, such as a "Get a Demo" button, should
 **Binding.** Where a cardinal is actually written onto a surface, for example the attribute on a web page or the identifier in an app. Bindings are kept in a **separate file for each surface, outside the specification** *(Lane's decision, relayed)*. The specification already says, in a note, that a team may produce "surface bindings" as local files. A binding as defined here is that idea made specific.
 
 **CardinalCollege.** The file that holds the cardinals, as a single source-of-truth list for all surfaces. *(Lane, first-hand, 2026-10-28.)* So it is a file, and there is one list that every surface draws on.
-> **STILL OPEN, Lane's to answer:** is that file today's canon file (`spec/canons/<name>.json`) under a new name, or a different file? Today's canon file also holds the cardinals (the specification calls them concepts), so the two may be the same thing, but Lane has not said so and this glossary does not assume it. Nothing more is said about CardinalCollege than the sentence above.
+> **Answered on Lane's delegation (2026-10-28), not in Lane's own words.** Lane asked whether CardinalCollege is today's canon file (`spec/canons/<name>.json`) under a new name or a different file, and told Claude to answer. The answer: **it is the same file.** CardinalCollege names the job today's canon file already does: it holds the cardinals (the specification calls them concepts) as one list that every surface is checked against.
+> Two limits on that answer. (1) The canon file also holds things that are not cardinals (its prefix, version, languages and capabilities), so CardinalCollege is the file seen in its role as the list of cardinals. (2) Nothing is renamed: the specification, the schema and the files still say "canon" until a new version of the specification. If Lane disagrees, this is the paragraph to change.
 
 ---
 
@@ -69,6 +70,6 @@ This uses the example canon in `spec/canons/meridian.json`, which is a made-up p
 ## What this glossary does not claim
 
 - It does not rename anything in the specification, the schema or any canon. "Concept" is still the word in all of them.
-- It does not say whether CardinalCollege is the same file as today's canon file. See the open line above.
+- It does not rename the canon file or any term in the specification. "Cardinal" and "CardinalCollege" are planned names used here for explanation.
 - It does not describe how bindings or element locations are stored. That is a decision for a later document.
 - It is a draft. Check any term against the specification before relying on it for a precise question.
