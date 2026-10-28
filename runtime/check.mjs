@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import { readFileSync } from "node:fs";
 import { parseArgs } from "node:util";
+import { parseDeclared } from "./declaration.mjs";
 
 const { values: args } = parseArgs({
   options: {
@@ -80,14 +81,7 @@ function visibleText(html, from, el) {
   return rest.slice(0, end === -1 ? 80 : end).replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
 }
 
-// <meta name="canon" content="<prefix>@<version>">
-function parseDeclared(content) {
-  if (!content) return { raw: content, prefix: null, version: null };
-  const i = content.lastIndexOf("@");
-  return i === -1
-    ? { raw: content, prefix: null, version: content }
-    : { raw: content, prefix: content.slice(0, i), version: content.slice(i + 1) };
-}
+// <meta name="canon" content="<prefix>@<version>">  (parsed by parseDeclared, imported from ./declaration.mjs)
 
 // ── verifier ────────────────────────────────────────────────────────────
 
