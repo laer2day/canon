@@ -22,6 +22,7 @@ const canon = {
     },
     { notation: "fx.link.old", cardinality: "singleton", namedBy: "visible", deprecated: true, replacedBy: "fx.link.home", prefLabel: { en: "Old" } },
     { notation: "fx.nav.main", cardinality: "singleton", namedBy: "aria", prefLabel: { en: "Main navigation" } },
+    { notation: "fx.link.qa", cardinality: "singleton", namedBy: "visible", prefLabel: { en: "Q&A’s" } },
   ],
 };
 const canonFile = join(mkdtempSync(join(tmpdir(), "check-test-")), "canon.json");
@@ -119,4 +120,13 @@ test("a repeating concept with zero observations is reported absent (info, not a
 test("canonVersion is the canon's own 'canon' field", () => {
   const { out } = run('<main><a data-element="fx.link.home" href="/">Home</a></main>');
   assert.equal(out.canonVersion, "0.1.0");
+});
+
+test("character references are decoded before the name check (Q&amp;A is the text Q&A)", () => {
+  assert.equal(run('<main><a data-element="fx.link.qa" href="/qa">Q&amp;A&#8217;s</a></main>').rc, 0);
+  assert.equal(run('<main><a data-element="fx.link.qa" href="/qa">Q&amp;A&rsquo;s</a></main>').rc, 1, "unknown named references stay literal");
+  const { rc, out } = run('<main><a data-element="fx.link.qa" href="/qa">Q&amp;B&#8217;s</a></main>');
+  assert.equal(rc, 1);
+  assert.ok(reasons(out).includes("namedby_violation"));
+  assert.equal(run('<main><a data-element="fx.link.qa" href="/qa">Q&amp;A&#39;s</a></main>').rc, 1, "a straight apostrophe is not the label's curly one");
 });

@@ -1,0 +1,59 @@
+{
+  "plugin": "posthog",
+  "contract": "0.1",
+  "vendor": "PostHog",
+  "derives": ["event-name", "event-property"],
+  "platforms": ["web"],
+  "check": {
+    "entry": "check.mjs",
+    "status": "implemented",
+    "layers": ["static"]
+  },
+  "claims": [
+    {
+      "text": "posthog-js persistence 'sessionStorage' or 'memory' keeps PostHog state out of cookies.",
+      "evidence": "documented",
+      "where": "posthog.com/docs/libraries/js (persistence option); not inspected in a browser by this plugin's tests"
+    },
+    {
+      "text": "session_recording.maskAllInputs masks every input value in replay.",
+      "evidence": "documented",
+      "where": "posthog.com/docs/session-replay/privacy"
+    },
+    {
+      "text": "person_profiles 'identified_only' keeps anonymous visitors from becoming person profiles.",
+      "evidence": "documented",
+      "where": "posthog.com/docs/libraries/js (person_profiles)"
+    },
+    {
+      "text": "posthog-js calls the `loaded` option with the live instance once array.js has initialised.",
+      "evidence": "documented",
+      "where": "posthog.com/docs/libraries/js (config: loaded); the client's queue relies on it"
+    },
+    {
+      "text": "A call made on the snippet placeholder after array.js has replaced it is never sent.",
+      "evidence": "observed",
+      "where": "one adopting surface lost custom events this way before switching to the live instance; not reproduced in this repository"
+    },
+    {
+      "text": "PostHog geolocates the address the request arrives from unless the event sets $geoip_disable.",
+      "evidence": "documented",
+      "where": "posthog.com/docs/cdp/geoip-enrichment"
+    },
+    {
+      "text": "PostHog does not receive the visitor IP when every request goes through the reference proxy.",
+      "evidence": "tested",
+      "where": "scripts/posthog-plugin.test.mjs: client-address headers and $ip are absent upstream; the proxy's own address still arrives, see README section 4"
+    },
+    {
+      "text": "PostHog's project setting to discard client IP data stops it storing the proxy's address too.",
+      "evidence": "documented",
+      "where": "PostHog project settings (IP data capture); not verified by this plugin"
+    },
+    {
+      "text": "Grouping click events by data-element satisfies spec section 11 for analytics consumers.",
+      "evidence": "design",
+      "where": "this plugin's event taxonomy; follows section 11, not checked against a vendor"
+    }
+  ]
+}
