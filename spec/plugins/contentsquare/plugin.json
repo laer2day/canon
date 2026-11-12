@@ -1,0 +1,44 @@
+{
+  "plugin": "contentsquare",
+  "contract": "0.1",
+  "vendor": "Contentsquare",
+  "derives": ["element-name", "event-name", "event-property"],
+  "platforms": ["web", "ios", "android"],
+  "check": {
+    "entry": "check.mjs",
+    "status": "stub",
+    "layers": []
+  },
+  "claims": [
+    {
+      "text": "On web, data-cs-override-id provides a stable tracking identity used by the tag's interaction collection and zoning.",
+      "evidence": "documented",
+      "where": "docs.contentsquare.com/en/web/events-handling/"
+    },
+    {
+      "text": "Classic trackPageEvent / event accepts a name only; no properties.",
+      "evidence": "documented",
+      "where": "support.contentsquare.com Events API reference"
+    },
+    {
+      "text": "Product Analytics trackEvent accepts a name and optional properties; customProperties:visit:add attaches properties to subsequent events.",
+      "evidence": "documented",
+      "where": "docs.contentsquare.com/en/web/product-analytics/ and command-reference"
+    },
+    {
+      "text": "On iOS, accessibilityIdentifier is the primary reliable target for zoning.",
+      "evidence": "documented",
+      "where": "docs.contentsquare.com iOS collected-data-points"
+    },
+    {
+      "text": "On Android, CSQ.setAreaIdentifier / csqAreaIdentifier assigns a reliable zone identifier.",
+      "evidence": "documented",
+      "where": "docs.contentsquare.com Android command-reference"
+    },
+    {
+      "text": "Mapping a Canon notation into data-cs-override-id (web) or the platform reliable identifier (mobile) gives one stable identity across surfaces.",
+      "evidence": "design",
+      "where": "this plugin's ARCHITECTURE.md; untested"
+    }
+  ]
+}
