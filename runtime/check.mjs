@@ -61,8 +61,8 @@ function walkDom(html) {
       element: el,
       notation: dataEl,
       instance: attr(attrs, "data-instance"),
-      ariaLabel: attr(attrs, "aria-label"),
-      visibleText: visibleText(html, m.index + m[0].length, el),
+      ariaLabel: decodeEntities(attr(attrs, "aria-label")),
+      visibleText: decodeEntities(visibleText(html, m.index + m[0].length, el)),
     });
   }
   return { observed: found, declared };
@@ -79,6 +79,18 @@ function visibleText(html, from, el) {
   const rest = html.slice(from, from + 2000);
   const end = rest.toLowerCase().indexOf(`</${el}`);
   return rest.slice(0, end === -1 ? 80 : end).replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
+}
+
+// Character references in HTML text and attribute values: "Q&amp;A" on the page is the text "Q&A" a person reads
+// and assistive technology announces, so the name check compares decoded text with the label.
+function decodeEntities(s) {
+  if (s === null) return null;
+  const NAMED = { amp: "&", lt: "<", gt: ">", quot: '"', apos: "'", nbsp: " " };
+  return s.replace(/&(#x[0-9a-f]+|#[0-9]+|[a-z]+);/gi, (whole, ref) => {
+    if (ref[0] !== "#") return NAMED[ref.toLowerCase()] ?? whole;
+    const code = ref[1] === "x" || ref[1] === "X" ? parseInt(ref.slice(2), 16) : parseInt(ref.slice(1), 10);
+    return Number.isFinite(code) && code > 0 && code <= 0x10ffff ? String.fromCodePoint(code) : whole;
+  });
 }
 
 // <meta name="canon" content="<prefix>@<version>">  (parsed by parseDeclared, imported from ./declaration.mjs)

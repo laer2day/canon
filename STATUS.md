@@ -27,6 +27,7 @@ Start with [AGENTS.md](AGENTS.md) for the rules and the picture, and [spec/GLOSS
 | Glossary | `spec/GLOSSARY.md` | draft, non-normative |
 | Plugin contract | `spec/plugins/CONTRACT.md`, `spec/plugins/plugin.schema.json` | draft, non-normative, with a manifest test in `npm test` |
 | Fullstory plugin | `spec/plugins/fullstory/` | README, retrofit guide, manifest and a **stub** check |
+| PostHog plugin (added 2026-11-12, on branch `posthog-plugin`) | `spec/plugins/posthog/` | privacy-first web client, IP-stripping proxy pattern with a reference proxy, and an **implemented static** check, all covered by `scripts/posthog-plugin.test.mjs`. posthog-js option behaviour is `documented`, not tested |
 | Surface contract (the watermark) | `spec/SURFACE-CONTRACT.md` | draft, non-normative; web only |
 | Agent orientation | `AGENTS.md` | loaded by tools that read AGENTS.md by default; Claude Code skips it if a `CLAUDE.md` exists in the working directory or above |
 

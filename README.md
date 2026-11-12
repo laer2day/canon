@@ -17,6 +17,7 @@ This is a specification and a thin format. It is not a library, a framework, or 
 | [spec/conformance/](spec/conformance/) | Fixtures and expected resolutions |
 | [spec/plugins/CONTRACT.md](spec/plugins/CONTRACT.md) | Draft, non-normative contract for plugins that derive a vendor structure from a canon, with a manifest schema |
 | [spec/plugins/fullstory/](spec/plugins/fullstory/README.md) | Non-normative binding for surfaces that run Fullstory, plus a [retrofit guide](spec/plugins/fullstory/retrofit-guide.md) |
+| [spec/plugins/posthog/](spec/plugins/posthog/README.md) | Non-normative, privacy-first PostHog analytics for web surfaces: a client, an IP-stripping proxy pattern and a static check |
 | [LICENSE](LICENSE) | MIT |
 
 `spec/semantic-surface-taxonomy.md` is the specification. An earlier engine proposal is not part of this repository. Where an older note disagrees with the spec, the spec wins.
