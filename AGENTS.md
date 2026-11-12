@@ -2,7 +2,7 @@
 
 Read this before acting in this repo. It states what Canon is for and the rules that must not drift. It is short on purpose: detail lives in the files it points to.
 
-**Two kinds of reader.** If you are working on Canon itself (the spec, canons, plugins, checks), this file governs you. If you are an agent **visiting a surface that claims to be canon-governed**, read [spec/SURFACE-CONTRACT.md](spec/SURFACE-CONTRACT.md): it says how to recognise the watermark and how far to trust it.
+**Two kinds of reader.** If you are working on Canon itself (the spec, CardinalColleges, plugins, checks), this file governs you. If you are an agent **visiting a surface that claims to be canon-governed**, read [spec/SURFACE-CONTRACT.md](spec/SURFACE-CONTRACT.md): it says how to recognise the watermark and how far to trust it.
 
 **Loading.** Tools that read `AGENTS.md` by default pick this up. Claude Code reads it only when no `CLAUDE.md` exists in the working directory or above, so a `CLAUDE.md` higher in the tree hides it. Do not assume it was loaded: if you can see its text, it was.
 
@@ -10,14 +10,14 @@ Read this before acting in this repo. It states what Canon is for and the rules 
 
 **Name each interactive part of a surface once, and derive everything else from that name.**
 
-People, assistive technology, analytics, tests and agents must all resolve the same identity for the same part. Canon is the single source of truth. Anything vendor-specific (a Fullstory element name, a test selector, an agent tool) is the **output** of a plugin applied to a canon, never a second vocabulary kept in step by hand.
+People, assistive technology, analytics, tests and agents must all resolve the same identity for the same part. The CardinalCollege is the single source of truth. Anything vendor-specific (a Fullstory element name, a test selector, an agent tool) is the **output** of a plugin applied to a CardinalCollege, never a second vocabulary kept in step by hand.
 
 If a change would make two places hold the same name that must be edited separately, it is drifting from the north star.
 
 ## The picture
 
 ```
-                        ONE CANON  (spec/canons/<name>.json)
+                   ONE CARDINALCOLLEGE  (spec/cardinal-colleges/<name>.json)
                   notation + cardinality + labels + instances
                                   |
         validates against ----->  spec/canon.schema.json   (normative, closed)
@@ -31,13 +31,13 @@ If a change would make two places hold the same name that must be edited separat
           |                       |                        |
           +-----------+-----------+------------------------+
                       |
-              CHECKS compare what is emitted/derived to the canon
+              CHECKS compare what is emitted/derived to the CardinalCollege
               (conformance suite, plugin check, runtime checker)
                       |
          a mismatch is a FAILURE, never silently ignored
 ```
 
-Three layers, never merged: **concept** (a notation, immutable once published), **label** (human text per locale, never a key), **instance** (a specific record id, never derived from rendered text or position).
+Three layers, never merged: **cardinal** (a notation, immutable once published), **label** (human text per locale, never a key), **instance** (a specific record id, never derived from rendered text or position).
 
 ## Rules that never change
 
@@ -54,16 +54,16 @@ Three layers, never merged: **concept** (a notation, immutable once published), 
 
 | Path | What |
 |---|---|
-| `spec/semantic-surface-taxonomy.md` | the specification, draft 0.2: the authority |
-| `spec/canon.schema.json` | normative schema for a canon |
-| `spec/canons/` | canons (`meridian.json` is a non-normative example) |
+| `spec/semantic-surface-taxonomy.md` | the specification, draft 0.3: the authority |
+| `spec/canon.schema.json` | normative schema for a CardinalCollege |
+| `spec/cardinal-colleges/` | CardinalColleges (`meridian.json` is a non-normative example) |
 | `spec/surfaces/`, `spec/conformance/` | surface fragments, fixtures, expected resolutions |
 | `STATUS.md` | where the project stands and what is left; read this to start a session (it ages: re-check before relying on it) |
 | `spec/GLOSSARY.md` | the project's words in plain language (notation, cardinal, instance, binding and more); start here if a term is unfamiliar (draft, non-normative) |
 | `spec/SURFACE-CONTRACT.md` | the watermark: how a surface declares it is canon-governed, and how a visiting agent treats that claim (draft, non-normative) |
 | `spec/plugins/CONTRACT.md` | what a plugin is and must do (draft, non-normative) |
 | `spec/plugins/<id>/` | one directory per plugin: `plugin.json`, a `check` entry point, its docs |
-| `scripts/validate-canon.mjs` | validates a canon against the schema and the rule checker |
+| `scripts/validate-canon.mjs` | validates a CardinalCollege against the schema and the rule checker |
 | `runtime/` | live-surface checker (fail-closed) |
 | `src/lib/check.ts` | the rule checker the tests and validator use |
 | `planning/` | gitignored; not part of the repo |
@@ -74,7 +74,7 @@ The app under `src/`, `server/`, `migrations/` is a non-normative studio demo, n
 
 ```bash
 npm test                                   # both runners must print a summary; read both
-node --experimental-strip-types --no-warnings scripts/validate-canon.mjs spec/canons/meridian.json   # prints VALID
+node --experimental-strip-types --no-warnings scripts/validate-canon.mjs spec/cardinal-colleges/meridian.json   # prints VALID
 node spec/plugins/fullstory/check.mjs      # currently a stub: must exit 2, never 0
 ```
 
@@ -84,9 +84,9 @@ node spec/plugins/fullstory/check.mjs      # currently a stub: must exit 2, neve
 
 This section ages. Verify against the repo before acting on any line.
 
-- **Built:** the spec (draft 0.2), the schema, one example canon, a conformance suite, a runtime checker, and a plugin contract with a manifest schema and a Fullstory manifest, covered by tests.
-- **Not built:** plugin discovery (how a surface declares a plugin), a common runner that calls each plugin's check, the notation-to-label mapping format, a generator that derives vendor names from a canon, and a real drift check. The Fullstory plugin's `check.mjs` is a **stub**. The Fullstory plugin is **not in operation**.
-- **The proof case** is the CarGo demo app (web, iOS, Android) as one multi-modal canon. Its canon does not exist yet. A plugin must be hardened against a real canon before it is applied to a real surface.
+- **Built:** the spec (draft 0.3), the schema, one example CardinalCollege, a conformance suite, a runtime checker, and a plugin contract with a manifest schema and a Fullstory manifest, covered by tests.
+- **Not built:** plugin discovery (how a surface declares a plugin), a common runner that calls each plugin's check, the notation-to-label mapping format, a generator that derives vendor names from a CardinalCollege, and a real drift check. The Fullstory plugin's `check.mjs` is a **stub**. The Fullstory plugin is **not in operation**.
+- **The proof case** is the CarGo demo app (web, iOS, Android) as one multi-modal CardinalCollege. Its CardinalCollege does not exist yet. A plugin must be hardened against a real CardinalCollege before it is applied to a real surface.
 - **Fullstory claims are untested.** The plugin's `plugin.json` lists each claim with its evidence class. None is `tested`. Whether a rename preserves history, whether a Compose element can be named, and whether the Fullstory name should equal the notation are open until tested on a non-production org.
 
 ## Do not
