@@ -61,7 +61,9 @@ Three layers, never merged: **cardinal** (a notation, immutable once published),
 | `STATUS.md` | where the project stands and what is left; read this to start a session (it ages: re-check before relying on it) |
 | `spec/GLOSSARY.md` | the project's words in plain language (notation, cardinal, instance, binding and more); start here if a term is unfamiliar (draft, non-normative) |
 | `spec/SURFACE-CONTRACT.md` | the watermark: how a surface declares it is canon-governed, and how a visiting agent treats that claim (draft, non-normative) |
-| `spec/plugins/CONTRACT.md` | what a plugin is and must do (draft, non-normative) |
+| `spec/plugins/CONTRACT.md` | what a plugin is and must do (draft 0.2, non-normative) |
+| `spec/property-enrichment.md` | companion draft 0.1 for property contracts (non-normative; not part of spec 0.3) |
+| `spec/property-contracts/` | sibling property contracts (`meridian.json` is the example) |
 | `spec/plugins/<id>/` | one directory per plugin: `plugin.json`, a `check` entry point, its docs |
 | `scripts/validate-canon.mjs` | validates a CardinalCollege against the schema and the rule checker |
 | `runtime/` | live-surface checker (fail-closed) |
@@ -84,10 +86,10 @@ node spec/plugins/fullstory/check.mjs      # currently a stub: must exit 2, neve
 
 This section ages. Verify against the repo before acting on any line.
 
-- **Built:** the spec (draft 0.3), the schema, one example CardinalCollege, a conformance suite, a runtime checker, and a plugin contract with a manifest schema and a Fullstory manifest, covered by tests.
-- **Not built:** plugin discovery (how a surface declares a plugin), a common runner that calls each plugin's check, the notation-to-label mapping format, a generator that derives vendor names from a CardinalCollege, and a real drift check. The Fullstory plugin's `check.mjs` is a **stub**. The Fullstory plugin is **not in operation**.
+- **Built:** the spec (draft 0.3), the schema, one example CardinalCollege, a conformance suite, a runtime checker, a plugin contract (draft 0.2) with a manifest schema, a Fullstory manifest, and a non-normative property-enrichment companion with an Amplitude plugin whose static check is implemented. The companion is not part of spec 0.3. The Amplitude plugin has not been run against Amplitude.
+- **Not built:** plugin discovery (how a surface declares a plugin), a common runner that calls each plugin's check, the notation-to-label mapping format, a generator that derives Fullstory element names or `data-fs-properties-schema` from a CardinalCollege, and a Fullstory drift check. The Fullstory plugin's `check.mjs` is a **stub**. The Fullstory plugin is **not in operation**. The Amplitude plugin derives track payloads from a property contract; that derivation was not run against Amplitude.
 - **The proof case** is the CarGo demo app (web, iOS, Android) as one multi-modal CardinalCollege. Its CardinalCollege does not exist yet. A plugin must be hardened against a real CardinalCollege before it is applied to a real surface.
-- **Fullstory claims are untested.** The plugin's `plugin.json` lists each claim with its evidence class. None is `tested`. Whether a rename preserves history, whether a Compose element can be named, and whether the Fullstory name should equal the notation are open until tested on a non-production org.
+- **Fullstory claims are untested.** The plugin's `plugin.json` lists each claim with its evidence class. None is `tested`. Whether a rename preserves history, whether a Compose element can be named, whether the Fullstory name should equal the notation, and whether a property contract should become `data-fs-properties-schema` are open. The last of those is design, written in `spec/plugins/fullstory/property-schema.md`.
 
 ## Do not
 

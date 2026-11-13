@@ -1,0 +1,56 @@
+{
+  "contractVersion": "0.1.0",
+  "college": "meridian",
+  "collegeVersion": "0.1.0",
+  "cardinals": [
+    {
+      "notation": "meridian.card.plan",
+      "properties": [
+        {
+          "name": "price",
+          "type": "number",
+          "scope": "element",
+          "source": "attribute",
+          "privacy": "public",
+          "attribute": "data-price"
+        },
+        {
+          "name": "productId",
+          "type": "string",
+          "scope": "element",
+          "source": "attribute",
+          "privacy": "public",
+          "attribute": "data-product-id"
+        }
+      ]
+    },
+    {
+      "notation": "meridian.nav.primary",
+      "properties": [
+        {
+          "name": "section",
+          "type": "string",
+          "scope": "page",
+          "source": "text-node",
+          "privacy": "public"
+        }
+      ]
+    },
+    {
+      "notation": "meridian.form.request-demo",
+      "properties": [
+        {
+          "name": "workEmail",
+          "type": "string",
+          "scope": "element",
+          "source": "data-layer",
+          "privacy": "excluded"
+        }
+      ]
+    },
+    {
+      "notation": "meridian.list.result",
+      "properties": []
+    }
+  ]
+}

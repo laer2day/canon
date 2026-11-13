@@ -1,0 +1,69 @@
+{
+  "plugin": "amplitude",
+  "contract": "0.2",
+  "vendor": "Amplitude",
+  "derives": ["enrichment-plugin", "track-payload", "event-property", "page-property"],
+  "platforms": ["web", "headless"],
+  "check": {
+    "entry": "check.mjs",
+    "status": "implemented",
+    "layers": ["static"]
+  },
+  "claims": [
+    {
+      "text": "Browser SDK track sends the event object the caller supplies. It does not read data-element or a property contract from the DOM.",
+      "evidence": "documented",
+      "where": "https://amplitude.com/docs/sdks/analytics/browser/browser-sdk-2/reference (track). Fetched 2026-11-13. Autocapture, on the same page, does read the DOM for clicks and page views. This plugin does not use autocapture to name properties."
+    },
+    {
+      "text": "An enrichment plugin's execute receives the event. If execute does not return the event, the event does not propagate. Returning null drops it.",
+      "evidence": "documented",
+      "where": "https://amplitude.com/docs/sdks/sdk-plugins (Plugin.execute, Drop an event). Fetched 2026-11-13."
+    },
+    {
+      "text": "The generated execute in this plugin always returns an event object, including when the input is missing, and it deletes excluded property names before returning.",
+      "evidence": "tested",
+      "where": "scripts/amplitude-plugin.test.mjs and the default path of check.mjs. Not run inside the Amplitude SDK."
+    },
+    {
+      "text": "Ampli is a generated client from an Amplitude Data tracking plan. The Browser SDK attaches a plan object (branch, source, version, versionId) to events when configured.",
+      "evidence": "documented",
+      "where": "https://amplitude.com/docs/sdks/analytics/browser/ampli-for-browser-sdk-2-0 and the plan option on https://amplitude.com/docs/sdks/analytics/browser/browser-sdk-2/reference. Fetched 2026-11-13."
+    },
+    {
+      "text": "Amplitude exposes an is-in-schema flag this plugin should set.",
+      "evidence": "design",
+      "where": "Not found on the SDK plugin, Browser SDK reference, or Ampli pages fetched 2026-11-13. This plugin does not invent that flag. A property is in the contract or it is a finding (unknown_property)."
+    },
+    {
+      "text": "Amplitude has no DOM access on web.",
+      "evidence": "design",
+      "where": "Not established. track does not read the DOM (documented, above). Browser SDK 2 autocapture does. This plugin does not claim the product has no DOM access."
+    },
+    {
+      "text": "Canonical number and integer both become a JSON number on the track payload. A numeric string is refused. date becomes an ISO-8601 string because this plugin does not claim Amplitude has a date type.",
+      "evidence": "tested",
+      "where": "spec/plugins/amplitude/derive.mjs coerce(), scripts/amplitude-plugin.test.mjs. The mapping is this plugin's rule. It was not sent to Amplitude."
+    },
+    {
+      "text": "An excluded property is refused: trackPayload omits it and records privacy-excluded, and execute deletes it if a caller attached it. The static check exits 1 when a payload still contains it.",
+      "evidence": "tested",
+      "where": "spec/conformance/property-enrichment/bad-excluded.json, scripts/amplitude-plugin.test.mjs"
+    },
+    {
+      "text": "There are no hand-authored Amplitude property names. A payload key that is not an identity key and not a contract property is unknown_property.",
+      "evidence": "tested",
+      "where": "spec/conformance/property-enrichment/bad-hand-authored.json"
+    },
+    {
+      "text": "Element properties and page properties are different scopes. A page-scoped property on a canon:click payload is scope_mismatch.",
+      "evidence": "tested",
+      "where": "spec/conformance/property-enrichment/bad-scope.json and good-page.json"
+    },
+    {
+      "text": "Native Amplitude SDKs (iOS, Android) consume the same contract.",
+      "evidence": "design",
+      "where": "Not written. This plugin derives a web enrichment function and a JSON track payload only."
+    }
+  ]
+}

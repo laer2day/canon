@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/laer2day/canon/main/spec/property-contract.schema.json",
+  "title": "Canon property contract (DRAFT, non-normative)",
+  "description": "Sibling artifact of a CardinalCollege. Plugins read it. It is not part of canon.schema.json, which stays closed (additionalProperties: false). Promoting this contract into the specification requires a new spec version.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["contractVersion", "college", "collegeVersion", "cardinals"],
+  "properties": {
+    "contractVersion": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+    },
+    "college": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]*$",
+      "description": "The CardinalCollege prefix this contract describes. Must equal that document's prefix."
+    },
+    "collegeVersion": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The CardinalCollege version field this contract was written against."
+    },
+    "cardinals": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["notation", "properties"],
+        "properties": {
+          "notation": { "type": "string", "minLength": 1, "maxLength": 50 },
+          "properties": {
+            "type": "array",
+            "items": { "$ref": "#/$defs/property" }
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "property": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "type", "scope", "source", "privacy"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "pattern": "^[a-z][a-zA-Z0-9]*$",
+          "description": "Canonical property name. Plugins copy this name. They do not invent a vendor name beside it."
+        },
+        "type": {
+          "enum": [
+            "string",
+            "number",
+            "integer",
+            "boolean",
+            "date",
+            "string-list",
+            "number-list",
+            "integer-list",
+            "boolean-list",
+            "date-list"
+          ]
+        },
+        "scope": { "enum": ["element", "page", "user"] },
+        "source": { "enum": ["attribute", "text-node", "data-layer"] },
+        "privacy": { "enum": ["public", "masked", "excluded"] },
+        "attribute": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]*$",
+          "description": "When source is attribute, the attribute the value is read from. Optional. Never a second property name."
+        }
+      }
+    }
+  }
+}

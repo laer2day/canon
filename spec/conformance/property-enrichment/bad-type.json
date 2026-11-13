@@ -1,0 +1,12 @@
+{
+  "id": "bad-type",
+  "payload": {
+    "event_type": "canon:click",
+    "event_properties": {
+      "canon": "meridian@0.1.0",
+      "canon_element": "meridian.card.plan",
+      "price": "20",
+      "productId": "sku-growth"
+    }
+  }
+}
