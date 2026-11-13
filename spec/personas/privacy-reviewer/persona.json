@@ -1,0 +1,26 @@
+{
+  "id": "privacy-reviewer",
+  "version": "0.1.0",
+  "scope": "Privacy class on a property contract, and any payload that claims to have applied it.",
+  "owns": ["spec/property-contracts/", "privacy class public, masked, excluded"],
+  "does": [
+    "Reject a public or masked property whose name looks like an email, phone, or similar personal fact.",
+    "Reject a payload that still carries an excluded property name."
+  ],
+  "doesNot": [
+    "Treat excluded as a value that may be copied.",
+    "Put a personal value in the example contract."
+  ],
+  "claims": [
+    {
+      "text": "A public property named like an email fails, and a payload that includes an excluded name fails.",
+      "evidence": "tested",
+      "where": "scripts/personas.test.mjs"
+    },
+    {
+      "text": "The meridian example's workEmail is excluded, so the name itself is not a public-name finding.",
+      "evidence": "tested",
+      "where": "scripts/personas.test.mjs on spec/property-contracts/meridian.json"
+    }
+  ]
+}

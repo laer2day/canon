@@ -28,6 +28,7 @@ Start with [AGENTS.md](AGENTS.md) for the rules and the picture, and [spec/GLOSS
 | Property enrichment | `spec/property-enrichment.md`, `spec/property-contract.schema.json`, `spec/property-contracts/meridian.json` | companion draft 0.1, non-normative. Not part of spec 0.3. Schema of the CardinalCollege is unchanged |
 | Fullstory plugin | `spec/plugins/fullstory/` | README, retrofit guide, manifest and a **stub** check. Property-schema derivation is a design note only |
 | Amplitude plugin | `spec/plugins/amplitude/` | derives element and page properties from the property contract. Static check is implemented and covered by `scripts/amplitude-plugin.test.mjs`. Not run against Amplitude |
+| Personas | `spec/personas/` | one directory per concern, version 0.1.0, independent of spec 0.3. Orchestrator assigns jobs by file. Each check is shown to fail. Not part of the specification |
 | PostHog plugin (added 2026-11-12, on branch `posthog-plugin`) | `spec/plugins/posthog/` | privacy-first web client, IP-stripping proxy pattern with a reference proxy, and an **implemented static** check, all covered by `scripts/posthog-plugin.test.mjs`. posthog-js option behaviour is `documented`, not tested |
 | Surface contract (the watermark) | `spec/SURFACE-CONTRACT.md` | draft, non-normative; web only |
 | Agent orientation | `AGENTS.md` | loaded by tools that read AGENTS.md by default; Claude Code skips it if a `CLAUDE.md` exists in the working directory or above |
@@ -39,6 +40,10 @@ Start with [AGENTS.md](AGENTS.md) for the rules and the picture, and [spec/GLOSS
 - **Cardinal** is the normative name for the universal identity (previously called concept). **CardinalCollege** is the normative name for the document that holds the list of cardinals as the single source of truth. Implemented in specification version 0.3.
 - The watermark is a claim and the runtime checker is the evidence; the attestation is unsigned.
 - One CardinalCollege, covering all three surfaces of the demo app. All eight design questions for that work were decided on 2026-10-20; the project's charter records them.
+
+## Personas: versioning (2026-11-13)
+
+`spec/personas/version.json` is `0.1.0`. `writtenBesideSpec` is `0.3` and is a note, not a coupling. A persona file carries its own `version`. The orchestrator does not require them to equal the specification. Personas are not promoted into the specification.
 
 ## Property enrichment: versioning decision (2026-11-13)
 
@@ -62,8 +67,9 @@ The property contract is a sibling artifact, companion draft 0.1 (`spec/property
 13. **A Fullstory property-schema generator.** `spec/plugins/fullstory/property-schema.md` is design only. The check is still a stub.
 14. **Heap and Contentsquare property plugins** that read the same contract. The triangulation is documented or design, as the companion says. No Heap plugin exists. The Contentsquare check is still a stub.
 15. **Running the Amplitude derivation inside the Amplitude SDK,** and native SDKs. The static check does not do that.
+16. **Promoting personas into the specification.** They are a directory the orchestrator reads. They are not spec 0.3, and their version is not the spec version.
 
-The 0.3 key and path migration of the checker, the runtime, the PostHog static check, and the tests is done. On 2026-11-13, before the property-enrichment tests, `npm test` printed two summaries (266 pass, then 73 pass). After those tests the same command printed 294 pass, then 73 pass. `scripts/validate-canon.mjs spec/cardinal-colleges/meridian.json` printed `VALID` (exit 0), the same validator exited 1 on a pre-0.3 document and on an illegal notation and 2 on a missing file, and `node spec/plugins/fullstory/check.mjs` exited 2. Re-run before relying on this paragraph.
+The 0.3 key and path migration of the checker, the runtime, the PostHog static check, and the tests is done. On 2026-11-13, before the property-enrichment tests, `npm test` printed two summaries (266 pass, then 73 pass). After those tests the same command printed 294 pass, then 73 pass. After the persona tests it printed 308 pass, then 73 pass. `scripts/validate-canon.mjs spec/cardinal-colleges/meridian.json` printed `VALID` (exit 0), the same validator exited 1 on a pre-0.3 document and on an illegal notation and 2 on a missing file, and `node spec/plugins/fullstory/check.mjs` exited 2. Re-run before relying on this paragraph.
 
 **Untested claims.** The Fullstory plugin's manifest lists each claim with an evidence class, and none is `tested`. Open until tested on a non-production organisation, with the owner's go-ahead: whether renaming an element preserves its history, whether a Jetpack Compose element can be named, whether Fullstory reads native identifiers by itself, and whether the Fullstory name should equal the notation. The property-schema derivation claim is `design` (`spec/plugins/fullstory/property-schema.md`). Amplitude claims that are `tested` were run in this repository only; they are listed in that plugin's manifest and were not sent to Amplitude.
 

@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/laer2day/canon/main/spec/personas/persona.schema.json",
+  "title": "Canon persona (DRAFT, non-normative)",
+  "description": "One concern, one file. Versioned independently of the specification.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "version", "scope", "owns", "does", "doesNot", "claims"],
+  "properties": {
+    "id": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" },
+    "version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+    "scope": { "type": "string", "minLength": 1 },
+    "owns": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
+    "does": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
+    "doesNot": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
+    "claims": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["text", "evidence"],
+        "properties": {
+          "text": { "type": "string", "minLength": 1 },
+          "evidence": { "enum": ["tested", "documented", "observed", "design"] },
+          "where": { "type": "string" }
+        }
+      }
+    }
+  }
+}

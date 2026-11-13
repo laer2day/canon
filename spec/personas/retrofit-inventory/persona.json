@@ -1,0 +1,22 @@
+{
+  "id": "retrofit-inventory",
+  "version": "0.1.0",
+  "scope": "The list of names a surface already uses, before any of them becomes a notation.",
+  "owns": ["inventory rows (legacy name, notation, evidence class)"],
+  "does": [
+    "Write one row per legacy name.",
+    "Keep the evidence class on the row."
+  ],
+  "doesNot": [
+    "Rename a published notation.",
+    "Invent a notation from visible text or from position.",
+    "Treat an empty inventory as done."
+  ],
+  "claims": [
+    {
+      "text": "An empty inventory fails, and a row without a legacy name, a notation, or an evidence class fails.",
+      "evidence": "tested",
+      "where": "scripts/personas.test.mjs"
+    }
+  ]
+}
