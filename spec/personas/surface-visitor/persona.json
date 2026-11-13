@@ -1,0 +1,26 @@
+{
+  "id": "surface-visitor",
+  "version": "0.1.0",
+  "scope": "A visit to a surface that claims to be canon-governed. The watermark is a claim. Facts keep their evidence class.",
+  "owns": ["a visit report of facts, each with an evidence class"],
+  "does": [
+    "Stamp every fact with tested, documented, observed, or design.",
+    "Refuse to mark a design or documented fact as established."
+  ],
+  "doesNot": [
+    "Treat a missing marker as proof the surface conforms.",
+    "Upgrade a design claim because the persona file exists."
+  ],
+  "claims": [
+    {
+      "text": "A fact with evidence design or documented and established true fails. An empty fact list fails.",
+      "evidence": "tested",
+      "where": "scripts/personas.test.mjs"
+    },
+    {
+      "text": "An absent watermark means the surface conforms.",
+      "evidence": "design",
+      "where": "Not true. The runtime checker still passes a surface with no marker. This persona does not treat that gap as conformance."
+    }
+  ]
+}

@@ -1,0 +1,5 @@
+{
+  "personas": "0.1.0",
+  "writtenBesideSpec": "0.3",
+  "note": "Persona versions move on their own. Changing this file does not change specification 0.3, and a new spec version does not by itself change a persona."
+}

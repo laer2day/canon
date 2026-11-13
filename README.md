@@ -19,6 +19,7 @@ This is a specification and a thin format. It is not a library, a framework, or 
 | [spec/property-enrichment.md](spec/property-enrichment.md) | Companion draft 0.1, non-normative. Property contracts are a sibling of a CardinalCollege. Not part of specification 0.3 |
 | [spec/property-contracts/meridian.json](spec/property-contracts/meridian.json) | Non-normative example property contract |
 | [spec/plugins/amplitude/](spec/plugins/amplitude/README.md) | Non-normative Amplitude plugin. Derives track payloads from the property contract. Not run against Amplitude |
+| [spec/personas/](spec/personas/README.md) | Non-normative persona directory, versioned apart from the specification. The orchestrator assigns work by file |
 | [spec/plugins/fullstory/](spec/plugins/fullstory/README.md) | Non-normative binding for surfaces that run Fullstory, plus a [retrofit guide](spec/plugins/fullstory/retrofit-guide.md) |
 | [spec/plugins/posthog/](spec/plugins/posthog/README.md) | Non-normative, privacy-first PostHog analytics for web surfaces: a client, an IP-stripping proxy pattern and a static check |
 | [LICENSE](LICENSE) | MIT |
