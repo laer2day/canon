@@ -1,5 +1,5 @@
 {
-  "canon": "0.1.0",
+  "version": "0.1.0",
   "prefix": "meridian",
   "defaultLocale": "en",
   "locales": [
@@ -13,7 +13,7 @@
     { "name": "watch_overview", "notation": "meridian.link.overview" },
     { "name": "open_plan", "notation": "meridian.card.plan" }
   ],
-  "concepts": [
+  "cardinals": [
     {
       "notation": "meridian.nav.primary",
       "cardinality": "singleton",
