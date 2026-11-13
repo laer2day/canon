@@ -1,0 +1,13 @@
+{
+  "version": "0.0.1",
+  "prefix": "fx",
+  "defaultLocale": "en",
+  "locales": [{ "tag": "en", "dir": "ltr" }],
+  "cardinals": [
+    {
+      "notation": "fx.button.buy",
+      "cardinality": "singleton",
+      "prefLabel": { "en": "Buy" }
+    }
+  ]
+}
