@@ -1,4 +1,4 @@
-import canonFile from "../../spec/canons/meridian.json";
+import canonFile from "../../spec/cardinal-colleges/meridian.json";
 import homeFile from "../../spec/surfaces/meridian-home.json";
 import {
   audit,
@@ -20,9 +20,9 @@ export type ActorId = "human" | "agent-ui" | "agent-tool" | "agent-headless";
 export type ComponentType = "button" | "link" | "nav" | "card" | "form" | "list-item";
 export type NamedBy = "visible" | "aria" | "labelledby";
 
-export const SPEC_VERSION = "0.2";
+export const SPEC_VERSION = "0.3";
 export const CANON = canonFile as CanonFile;
-export const CANON_VERSION = CANON.canon;
+export const CANON_VERSION = CANON.version;
 export const PREFIX = CANON.prefix;
 export const CANON_PRETTY = JSON.stringify(CANON, null, 2);
 export const FORM_LABEL_ID = "request-demo-title";
@@ -90,7 +90,7 @@ export type InstanceRecord = {
   stability: "record" | "slug";
 };
 
-export type Concept = {
+export type Cardinal = {
   notation: string;
   cardinality: "singleton" | "repeating";
   namedBy: NamedBy;
@@ -140,20 +140,20 @@ function presentation(notation: string): Pick<Placement, "element" | "role" | "c
   return PLACEMENTS.find((part) => part.notation === notation) ?? { element: "a", role: "link", component: "link" };
 }
 
-export const CONCEPTS: Concept[] = CANON.concepts.map((concept) => {
-  const face = presentation(concept.notation);
+export const CARDINALS: Cardinal[] = CANON.cardinals.map((cardinal) => {
+  const face = presentation(cardinal.notation);
   return {
-    notation: concept.notation,
-    cardinality: concept.cardinality,
-    namedBy: concept.namedBy ?? "visible",
+    notation: cardinal.notation,
+    cardinality: cardinal.cardinality,
+    namedBy: cardinal.namedBy ?? "visible",
     component: face.component,
     element: face.element,
     role: face.role,
-    ephemeral: Boolean(concept.ephemeral),
-    deprecated: Boolean(concept.deprecated),
-    replacedBy: concept.replacedBy,
-    labels: concept.prefLabel as Labels,
-    instances: concept.instances?.map((instance) => ({
+    ephemeral: Boolean(cardinal.ephemeral),
+    deprecated: Boolean(cardinal.deprecated),
+    replacedBy: cardinal.replacedBy,
+    labels: cardinal.prefLabel as Labels,
+    instances: cardinal.instances?.map((instance) => ({
       id: instance.id,
       stability: instance.stability,
       names: instance.name as Labels,
@@ -168,8 +168,8 @@ export function placementKey(placement: Placement): string {
   return placement.notation;
 }
 
-export function getConcept(notation: string): Concept {
-  const found = CONCEPTS.find((concept) => concept.notation === notation);
+export function getCardinal(notation: string): Cardinal {
+  const found = CARDINALS.find((cardinal) => cardinal.notation === notation);
   if (!found) throw new Error(`Unknown notation: ${notation}`);
   return found;
 }
@@ -182,7 +182,7 @@ export function getPlacement(key: string): Placement {
 
 export type ResolvedPart = {
   key: string;
-  concept: Concept;
+  cardinal: Cardinal;
   placement: Placement;
   instance: InstanceRecord | null;
   name: ResolvedText;
@@ -194,28 +194,28 @@ export type ResolvedPart = {
 
 export function resolvePart(key: string, localeId: LocaleId): ResolvedPart {
   const placement = getPlacement(key);
-  const concept = getConcept(placement.notation);
-  const instance = placement.instanceId ? (concept.instances?.find((item) => item.id === placement.instanceId) ?? null) : null;
-  const name = resolveText(concept.cardinality === "singleton" ? concept.labels : instance ? instance.names : (placement.names ?? concept.labels), localeId);
+  const cardinal = getCardinal(placement.notation);
+  const instance = placement.instanceId ? (cardinal.instances?.find((item) => item.id === placement.instanceId) ?? null) : null;
+  const name = resolveText(cardinal.cardinality === "singleton" ? cardinal.labels : instance ? instance.names : (placement.names ?? cardinal.labels), localeId);
   return {
     key,
-    concept,
+    cardinal,
     placement,
     instance,
     name,
-    typeLabel: resolveText(concept.labels, localeId),
+    typeLabel: resolveText(cardinal.labels, localeId),
     detail: instance?.detail ? resolveText(instance.detail, localeId) : null,
-    reference: placement.instanceId ? `${concept.notation}#${placement.instanceId}` : concept.notation,
-    visible: concept.namedBy === "aria" ? null : name.label,
+    reference: placement.instanceId ? `${cardinal.notation}#${placement.instanceId}` : cardinal.notation,
+    visible: cardinal.namedBy === "aria" ? null : name.label,
   };
 }
 
 function toEmission(part: ResolvedPart, localeId: LocaleId, surface: SurfaceId, interactionType: InteractionType | null, localeKnown: boolean): Emission {
-  const concept = CANON.concepts.find((item) => item.notation === part.concept.notation);
-  if (!concept) throw new Error(`Missing canon concept ${part.concept.notation}`);
+  const cardinal = CANON.cardinals.find((item) => item.notation === part.cardinal.notation);
+  if (!cardinal) throw new Error(`Missing cardinal ${part.cardinal.notation}`);
   return emissionFor({
     canon: CANON,
-    concept,
+    cardinal,
     instance: part.placement.instanceId,
     rank: part.placement.rank ?? null,
     names: part.placement.names,
@@ -224,12 +224,12 @@ function toEmission(part: ResolvedPart, localeId: LocaleId, surface: SurfaceId, 
     surface,
     interactionType,
     description: surface === "headless" ? descriptionFor(part, localeKnown) : null,
-    labelledBy: part.concept.namedBy === "labelledby" ? FORM_LABEL_ID : null,
+    labelledBy: part.cardinal.namedBy === "labelledby" ? FORM_LABEL_ID : null,
   });
 }
 
 export function descriptionFor(part: ResolvedPart, localeKnown: boolean): string {
-  const labels = part.instance ? part.instance.names : part.concept.labels;
+  const labels = part.instance ? part.instance.names : part.cardinal.labels;
   if (!localeKnown) return labels.en;
   return part.instance ? part.name.label : part.typeLabel.label;
 }
@@ -362,7 +362,7 @@ export function emitCode(options: {
 }): string {
   const { surface, part, localeId, interactionType, localeKnown } = options;
   const emission = toEmission(part, localeId, surface, surface === "headless" ? "mcp-tool-call" : interactionType, localeKnown);
-  const instanceLine = emission.instance ? emission.instance : part.concept.ephemeral ? "omitted · ephemeral" : "omitted · singleton";
+  const instanceLine = emission.instance ? emission.instance : part.cardinal.ephemeral ? "omitted · ephemeral" : "omitted · singleton";
 
   if (surface === "web") {
     const attrs = [
@@ -375,7 +375,7 @@ export function emitCode(options: {
       emission.lang ? `   lang="${emission.lang}"` : null,
       emission.dir ? `   dir="${emission.dir}"` : null,
     ].filter((line): line is string => line !== null);
-    return [`<!-- surface canon ${CANON_VERSION} -->`, `<${part.concept.element}`, ...attrs, ">", emission.visible ? `  ${emission.visible}` : "", `</${part.concept.element}>`]
+    return [`<!-- surface canon ${CANON_VERSION} -->`, `<${part.cardinal.element}`, ...attrs, ">", emission.visible ? `  ${emission.visible}` : "", `</${part.cardinal.element}>`]
       .filter((line) => line !== "")
       .join("\n");
   }
@@ -403,7 +403,7 @@ export function emitCode(options: {
     return [`Modifier.testTag("${emission.notation}")`, "semantics {", ...body, "}"].join("\n");
   }
 
-  const capability = capabilityFor(part.concept.notation);
+  const capability = capabilityFor(part.cardinal.notation);
   if (!capability) {
     return ["// No capability for this notation.", "// Headless has no accessibility tree.", `// Identity remains ${part.reference}`].join("\n");
   }
@@ -416,7 +416,7 @@ export function emitCode(options: {
     "registerTool({",
     `  name: "${capability.name}",`,
     `  description: "${emission.description}",`,
-    `  notation: "${part.concept.notation}",`,
+    `  notation: "${part.cardinal.notation}",`,
     `  interactionType: "mcp-tool-call",`,
     `  inputSchema: { "type": "object", "properties": {${instanceProp}} }`,
     "})",
@@ -451,7 +451,7 @@ export const IDENTITY_RULES: { title: string; body: string }[] = [
 export const CARDINALITY_RULES: { title: string; body: string }[] = [
   {
     title: "Singleton",
-    body: "Once per page. The check counts occurrences. Get a Demo is one concept and one occurrence, so it has no instance. A second copy fails conformance.",
+    body: "Once per page. The check counts occurrences. Get a Demo is one cardinal and one occurrence, so it has no instance. A second copy fails conformance.",
   },
   {
     title: "Repeating",
@@ -495,7 +495,7 @@ export const EMISSION_ROWS: { surface: string; notation: string; instance: strin
   {
     surface: "Headless",
     notation: "tool notation",
-    instance: "argument, when the concept repeats",
+    instance: "argument, when the cardinal repeats",
     name: "capability description, never the notation",
     lang: "default locale when the agent locale is unknown",
     interaction: "mcp-tool-call",

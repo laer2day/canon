@@ -9,18 +9,18 @@ Same idea as TLS: the surface is either still conforming or it isn't, and the fa
 2. Fetches a target URL and parses the DOM.
 3. Walks every element carrying `data-element`.
 4. Resolves each notation against the canon: cardinality, namedBy policy, deprecation, privacy.
-5. Emits one **unsigned** attestation per check: pass/fail, per-concept results, reason codes. Nothing in the output proves who produced it.
+5. Emits one **unsigned** attestation per check: pass/fail, per-cardinal results, reason codes. Nothing in the output proves who produced it.
 
 ## Usage
 
 ```bash
-node runtime/check.mjs --canon spec/canons/meridian.json --url https://example.com
+node runtime/check.mjs --canon spec/cardinal-colleges/meridian.json --url https://example.com
 ```
 
 Or pipe a DOM snapshot:
 
 ```bash
-cat page.html | node runtime/check.mjs --canon spec/canons/meridian.json --stdin
+cat page.html | node runtime/check.mjs --canon spec/cardinal-colleges/meridian.json --stdin
 ```
 
 ## Output
@@ -42,7 +42,7 @@ One JSON attestation to stdout:
 }
 ```
 
-Reason codes: `unknown_notation` (including an empty `data-element`), `deprecated_emitted`, `namedby_violation`, `redundant_aria_label`, `missing_attribute`, `cardinality_mismatch`, `privacy_leak`, `version_mismatch`. A repeating concept with no observations is reported as `absent` (informational; it never fails the check). A rename is not detectable from a single snapshot, so there is no `renamed` code.
+Reason codes: `unknown_notation` (including an empty `data-element`), `deprecated_emitted`, `namedby_violation`, `redundant_aria_label`, `missing_attribute`, `cardinality_mismatch`, `privacy_leak`, `version_mismatch`. A repeating cardinal with no observations is reported as `absent` (informational; it never fails the check). A rename is not detectable from a single snapshot, so there is no `renamed` code. A document that still uses the pre-0.3 keys `concepts` or a top-level `canon` version field does not run (exit 2). The CardinalCollege keys are `cardinals` and `version`.
 
 Fail closed: every flagged result makes `pass` false and the exit code non-zero. A non-pass attestation means Sekizui (or any consumer) should refuse to treat that surface's data as trustworthy until it's fixed.
 
