@@ -8,7 +8,7 @@ export function Brief() {
         id="identity"
         index="02"
         title="Three layers"
-        lede="A concept, a label, and an instance are not the same string. The studio’s rail is the reference. The page is only the visible text."
+        lede="A cardinal, a label, and an instance are not the same string. The studio’s rail is the reference. The page is only the visible text."
       >
         <ul className="grid gap-4 sm:grid-cols-2">
           {IDENTITY_RULES.map((rule) => (

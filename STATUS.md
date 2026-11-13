@@ -1,6 +1,6 @@
 # Canon: where we are
 
-**As of 2026-11-12.** This file ages. Before relying on any line, check the repository (`git log`, `npm test`). It is a handoff note so the next session starts from the real state. It is not part of the specification.
+**As of 2026-11-13.** This file ages. Before relying on any line, check the repository (`git log`, `npm test`). It is a handoff note so the next session starts from the real state. It is not part of the specification.
 
 ## In one paragraph
 
@@ -8,10 +8,10 @@ Canon names each interactive part of a digital surface once, so people, assistiv
 
 Start with [AGENTS.md](AGENTS.md) for the rules and the picture, and [spec/GLOSSARY.md](spec/GLOSSARY.md) for the words.
 
-## State of the repository (observed 2026-11-12)
+## State of the repository (observed 2026-11-13)
 
-- Branch `spec-0.3-cardinal` holds the version 0.3 terminology promotion (open as draft PR #1).
-- `npm test` and the validator have not yet been re-run against the new key names and paths.
+- Specification 0.3 is on `main` (PR #1 merged). The CardinalCollege key is `cardinals`, each item is `$defs/cardinal`, and the document version is `version`. The example is `spec/cardinal-colleges/meridian.json`.
+- The rule checker (`src/lib/check.ts`), the runtime checker (`runtime/check.mjs`), the PostHog static check, and the tests that load the example read those keys and that path. A document that still carries `concepts` or a top-level `canon` version field does not run (exit 2) and is rejected by `validateCanon`. That refusal was shown to fail closed; it is not a silent read of the old keys.
 - `node spec/plugins/fullstory/check.mjs` exits 2 (the stub). Exit 2 means "did not run" and is never a pass.
 
 ## What is built
@@ -21,7 +21,7 @@ Start with [AGENTS.md](AGENTS.md) for the rules and the picture, and [spec/GLOSS
 | Specification, draft 0.3 | `spec/semantic-surface-taxonomy.md` | the authority; changes only by a new version (section 10). Cardinal and CardinalCollege are first-class. |
 | CardinalCollege schema | `spec/canon.schema.json` | normative and closed (`additionalProperties: false`). Key is `cardinals`. |
 | Example CardinalCollege, fragment, fixtures | `spec/cardinal-colleges/`, `spec/surfaces/`, `spec/conformance/` | non-normative example |
-| Runtime checker | `runtime/check.mjs` | fail-closed; reads `<meta name="canon">`; **passes a surface with no marker** (known gap). May need path/key updates. |
+| Runtime checker | `runtime/check.mjs` | fail-closed; reads `<meta name="canon">` and a CardinalCollege (`cardinals`, `version`); **passes a surface with no marker** (known gap). Pre-0.3 keys exit 2. |
 | Watermark parser | `runtime/declaration.mjs` | `parseDeclared` is used by the checker. `strictDeclared` and `agree` are **tested but called by nothing** |
 | Glossary | `spec/GLOSSARY.md` | draft, non-normative; terms now match the specification |
 | Plugin contract | `spec/plugins/CONTRACT.md`, `spec/plugins/plugin.schema.json` | draft, non-normative, with a manifest test in `npm test` |
@@ -53,7 +53,8 @@ Start with [AGENTS.md](AGENTS.md) for the rules and the picture, and [spec/GLOSS
 10. **The checker's gap:** a surface with no marker passes. Whether an absent marker should fail for a surface that is meant to be governed is undecided and would change the checker.
 11. **Promoting the plugin contract and the watermark into the specification,** which needs a new spec version.
 12. **A CardinalCollege for the demo app.** That depends on the work below.
-13. **Verify tests and validator** against the 0.3 schema and paths.
+
+The 0.3 key and path migration of the checker, the runtime, the PostHog static check, and the tests is done. On 2026-11-13, `npm test` printed two summaries (266 pass, then 73 pass), `scripts/validate-canon.mjs spec/cardinal-colleges/meridian.json` printed `VALID` (exit 0), the same validator exited 1 on a pre-0.3 document and on an illegal notation and 2 on a missing file, and `node spec/plugins/fullstory/check.mjs` exited 2. Re-run before relying on this paragraph.
 
 **Untested claims.** The Fullstory plugin's manifest lists twelve claims, each with an evidence class, and none is `tested`. Open until tested on a non-production organisation, with the owner's go-ahead: whether renaming an element preserves its history, whether a Jetpack Compose element can be named, whether Fullstory reads native identifiers by itself, and whether the Fullstory name should equal the notation.
 

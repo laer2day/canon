@@ -14,13 +14,13 @@ import { cleanHeaders, createProxy, scrub } from '../spec/plugins/posthog/proxy/
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const plugin = join(root, 'spec/plugins/posthog');
-const canonPath = join(root, 'spec/canons/meridian.json');
+const canonPath = join(root, 'spec/cardinal-colleges/meridian.json');
 const canon = JSON.parse(readFileSync(canonPath, 'utf8'));
-const singleton = canon.concepts.find((c) => c.cardinality === 'singleton' && !c.deprecated).notation;
-const deprecated = canon.concepts.find((c) => c.deprecated)?.notation;
+const singleton = canon.cardinals.find((c) => c.cardinality === 'singleton' && !c.deprecated).notation;
+const deprecated = canon.cardinals.find((c) => c.deprecated)?.notation;
 
 // ---------- static check ----------
-const GOOD = `<!doctype html><html><head><meta name="canon" content="${canon.prefix}@${canon.canon}">
+const GOOD = `<!doctype html><html><head><meta name="canon" content="${canon.prefix}@${canon.version}">
 <script defer src="/canon-posthog.js" data-key="phc_example" data-api-host="https://t.example.org"></script></head>
 <body><a href="/x" data-element="${singleton}">x</a></body></html>`;
 
@@ -63,6 +63,14 @@ describe('posthog static check', () => {
   });
   it('does not run on an unreadable canon (exit 2)', () => {
     assert.equal(check(['--canon', join(tmpdir(), 'missing.json'), '--dist', site()]).code, 2);
+  });
+  it('does not run on a pre-0.3 college (exit 2, never 0)', () => {
+    const old = { ...canon, canon: canon.version, concepts: canon.cardinals };
+    delete old.version;
+    delete old.cardinals;
+    const file = join(mkdtempSync(join(tmpdir(), 'ph-old-')), 'canon.json');
+    writeFileSync(file, JSON.stringify(old));
+    assert.equal(check(['--canon', file, '--dist', site()]).code, 2);
   });
 });
 

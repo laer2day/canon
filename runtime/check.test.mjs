@@ -10,11 +10,11 @@ const here = dirname(fileURLToPath(import.meta.url));
 const CHECK = join(here, "check.mjs");
 
 const canon = {
-  canon: "0.1.0",
+  version: "0.1.0",
   prefix: "fx",
   defaultLocale: "en",
   locales: [{ tag: "en", dir: "ltr" }],
-  concepts: [
+  cardinals: [
     { notation: "fx.link.home", cardinality: "singleton", namedBy: "visible", prefLabel: { en: "Home" } },
     {
       notation: "fx.link.item", cardinality: "repeating", namedBy: "visible", prefLabel: { en: "Item" },
@@ -84,7 +84,7 @@ test("a singleton emitted twice is a cardinality_mismatch", () => {
   assert.ok(reasons(out).includes("cardinality_mismatch"));
 });
 
-test("an aria-named concept with no aria-label is a missing_attribute", () => {
+test("an aria-named cardinal with no aria-label is a missing_attribute", () => {
   const { rc, out } = run('<nav data-element="fx.nav.main"></nav>');
   assert.notEqual(rc, 0);
   assert.ok(reasons(out).includes("missing_attribute"));
@@ -111,15 +111,36 @@ test("an absent meta reports declaredVersion null and does not fail", () => {
   assert.equal(out.declaredVersion, null);
 });
 
-test("a repeating concept with zero observations is reported absent (info, not a failure)", () => {
+test("a repeating cardinal with zero observations is reported absent (info, not a failure)", () => {
   const { rc, out } = run("<main></main>");
   assert.equal(rc, 0);
   assert.ok(out.results.some((r) => r.status === "absent" && r.notation === "fx.link.item"));
 });
 
-test("canonVersion is the canon's own 'canon' field", () => {
+test("canonVersion is the CardinalCollege version field", () => {
   const { out } = run('<main><a data-element="fx.link.home" href="/">Home</a></main>');
   assert.equal(out.canonVersion, "0.1.0");
+  assert.equal(out.summary.cardinalsDeclared, canon.cardinals.length);
+});
+
+test("a pre-0.3 college (concepts / top-level canon) does not run (exit 2, empty stdout)", () => {
+  const old = { ...canon, canon: canon.version, concepts: canon.cardinals };
+  delete old.version;
+  delete old.cardinals;
+  const file = join(mkdtempSync(join(tmpdir(), "check-old-")), "canon.json");
+  writeFileSync(file, JSON.stringify(old));
+  const r = spawnSync("node", [CHECK, "--canon", file, "--stdin"], { input: "<main></main>", encoding: "utf8" });
+  assert.equal(r.status, 2);
+  assert.equal(r.stdout, "");
+});
+
+test("a college that still carries the old keys beside the new ones does not run (exit 2)", () => {
+  const both = { ...canon, concepts: canon.cardinals, canon: canon.version };
+  const file = join(mkdtempSync(join(tmpdir(), "check-both-")), "canon.json");
+  writeFileSync(file, JSON.stringify(both));
+  const r = spawnSync("node", [CHECK, "--canon", file, "--stdin"], { input: "<main></main>", encoding: "utf8" });
+  assert.equal(r.status, 2);
+  assert.equal(r.stdout, "");
 });
 
 test("character references are decoded before the name check (Q&amp;A is the text Q&A)", () => {
