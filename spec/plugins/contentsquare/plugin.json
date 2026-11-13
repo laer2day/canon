@@ -1,6 +1,6 @@
 {
   "plugin": "contentsquare",
-  "contract": "0.1",
+  "contract": "0.2",
   "vendor": "Contentsquare",
   "derives": ["element-name", "event-name", "event-property"],
   "platforms": ["web", "ios", "android"],
