@@ -32,6 +32,8 @@ An interactive thing on a digital product, such as a "Get a Demo" button, should
 
 **Binding.** Where a cardinal is actually written onto a surface, for example the attribute on a web page or the identifier in an app. Bindings are kept in a **separate file for each surface, outside the specification**.
 
+**Property contract.** A separate file, next to a CardinalCollege, that lists the facts a cardinal may carry (a price, a product id) and whether each fact may be sent to an analytics tool. It is not part of the CardinalCollege. The CardinalCollege stays the list of cardinals. The companion that describes the file is non-normative.
+
 ---
 
 ## A worked example

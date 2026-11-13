@@ -149,3 +149,4 @@ Each consumer honors a minimum contract and no more.
 - Generators, validators, and surface bindings are local artifacts a team may produce after adopting the specification. They are not required for conformance.
 - The methodology is intended to be followed by both humans and LLMs when authoring or reviewing a CardinalCollege.
 - The example CardinalCollege and the studio that renders it are not normative.
+- Property enrichment is described in the companion [property-enrichment.md](property-enrichment.md) (companion draft 0.1). That companion is not part of version 0.3. It does not add a conformance rule to this document and it does not add a field to [canon.schema.json](canon.schema.json). The property contract is a sibling artifact. Promoting the companion into this specification requires a new version of this document (section 10). That promotion is not taken here.

@@ -1,6 +1,6 @@
 {
   "plugin": "posthog",
-  "contract": "0.1",
+  "contract": "0.2",
   "vendor": "PostHog",
   "derives": ["event-name", "event-property"],
   "platforms": ["web"],

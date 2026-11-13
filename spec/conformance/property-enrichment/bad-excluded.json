@@ -1,0 +1,11 @@
+{
+  "id": "bad-excluded",
+  "payload": {
+    "event_type": "canon:click",
+    "event_properties": {
+      "canon": "meridian@0.1.0",
+      "canon_element": "meridian.form.request-demo",
+      "workEmail": "person@example.com"
+    }
+  }
+}

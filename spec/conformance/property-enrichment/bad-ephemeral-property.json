@@ -1,0 +1,11 @@
+{
+  "id": "bad-ephemeral-property",
+  "payload": {
+    "event_type": "canon:click",
+    "event_properties": {
+      "canon": "meridian@0.1.0",
+      "canon_element": "meridian.list.result",
+      "resultText": "Enterprise"
+    }
+  }
+}
