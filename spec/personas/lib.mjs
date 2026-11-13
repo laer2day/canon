@@ -25,8 +25,14 @@ export function finish(report) {
   process.exit(report.pass ? 0 : 1);
 }
 
+const compiled = new Map();
+
 function compile(schemaPath) {
-  return ajv.compile(JSON.parse(readFileSync(schemaPath, "utf8")));
+  const cached = compiled.get(schemaPath);
+  if (cached) return cached;
+  const validate = ajv.compile(JSON.parse(readFileSync(schemaPath, "utf8")));
+  compiled.set(schemaPath, validate);
+  return validate;
 }
 
 export function personaValidator(personasDir) {
