@@ -1,0 +1,27 @@
+{
+  "id": "plugin-author",
+  "version": "0.1.0",
+  "scope": "One plugin directory: manifest, check, and the evidence class on every vendor claim.",
+  "owns": ["spec/plugins/<id>/"],
+  "does": [
+    "Keep a check that exits 0, 1, or 2.",
+    "Refuse a tested-class claim on a stub.",
+    "Require a tested-class claim to name a file that exists."
+  ],
+  "doesNot": [
+    "Add a field to canon.schema.json.",
+    "Mark a design claim as tested because the manifest parses."
+  ],
+  "claims": [
+    {
+      "text": "A stub check that carries a tested claim fails, and an implemented check whose tested claim names no existing file fails.",
+      "evidence": "tested",
+      "where": "scripts/personas.test.mjs"
+    },
+    {
+      "text": "The Amplitude and Fullstory directories currently satisfy this check: Fullstory is a stub with no tested claim, and Amplitude's tested claims name files in this repository.",
+      "evidence": "tested",
+      "where": "scripts/personas.test.mjs"
+    }
+  ]
+}

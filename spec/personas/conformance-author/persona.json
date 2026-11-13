@@ -1,0 +1,21 @@
+{
+  "id": "conformance-author",
+  "version": "0.1.0",
+  "scope": "Fixtures and expected results, including fixtures that are able to fail a check.",
+  "owns": ["spec/conformance/"],
+  "does": [
+    "Give every fixture a payload or a non-empty expectFail list.",
+    "Keep a fixture that cannot fail out of the suite."
+  ],
+  "doesNot": [
+    "Accept an empty fixture as conformance.",
+    "Treat a fixture that has no payload and no expectFail as a check."
+  ],
+  "claims": [
+    {
+      "text": "An empty fixture list fails, a missing file fails, and a fixture with neither payload.event_properties nor expectFail fails.",
+      "evidence": "tested",
+      "where": "scripts/personas.test.mjs"
+    }
+  ]
+}

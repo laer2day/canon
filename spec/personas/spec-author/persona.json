@@ -1,0 +1,26 @@
+{
+  "id": "spec-author",
+  "version": "0.1.0",
+  "scope": "The specification text, the CardinalCollege schema, and the decision to bump or not bump the spec version.",
+  "owns": ["spec/semantic-surface-taxonomy.md", "spec/canon.schema.json"],
+  "does": [
+    "Record a version decision whenever the specification or canon.schema.json changes.",
+    "Leave additionalProperties false unless a new spec version says otherwise."
+  ],
+  "doesNot": [
+    "Add a field to the schema as a side effect of a plugin or a companion.",
+    "Describe a design or documented claim as established."
+  ],
+  "claims": [
+    {
+      "text": "A change to spec/semantic-surface-taxonomy.md or spec/canon.schema.json without a version decision fails this persona's check.",
+      "evidence": "tested",
+      "where": "scripts/personas.test.mjs"
+    },
+    {
+      "text": "Property enrichment stays a companion until a spec version promotes it.",
+      "evidence": "design",
+      "where": "spec/property-enrichment.md versioning decision; this check does not promote it"
+    }
+  ]
+}
