@@ -65,6 +65,7 @@ Three layers, never merged: **cardinal** (a notation, immutable once published),
 | `spec/property-enrichment.md` | companion draft 0.1 for property contracts (non-normative; not part of spec 0.3) |
 | `spec/property-contracts/` | sibling property contracts (`meridian.json` is the example) |
 | `spec/personas/` | one directory per persona, versioned apart from the spec; `orchestrator.mjs` assigns jobs by file |
+| `spec/mcp/` | scaffold that scans a tree and writes persona jobs. Drift sources are facts. Not a live vendor client |
 | `spec/plugins/<id>/` | one directory per plugin: `plugin.json`, a `check` entry point, its docs |
 | `scripts/validate-canon.mjs` | validates a CardinalCollege against the schema and the rule checker |
 | `runtime/` | live-surface checker (fail-closed) |
@@ -87,7 +88,7 @@ node spec/plugins/fullstory/check.mjs      # currently a stub: must exit 2, neve
 
 This section ages. Verify against the repo before acting on any line.
 
-- **Built:** the spec (draft 0.3), the schema, one example CardinalCollege, a conformance suite, a runtime checker, a plugin contract (draft 0.2) with a manifest schema, a Fullstory manifest, a non-normative property-enrichment companion with an Amplitude plugin whose static check is implemented, and a persona directory (`spec/personas/`, version 0.1.0, independent of the spec) with an orchestrator that assigns by file. The companion and the personas are not part of spec 0.3. The Amplitude plugin has not been run against Amplitude.
+- **Built:** the spec (draft 0.3), the schema, one example CardinalCollege, a conformance suite, a runtime checker, a plugin contract (draft 0.2) with a manifest schema, a Fullstory manifest, a non-normative property-enrichment companion with an Amplitude plugin whose static check is implemented, a persona directory (`spec/personas/`, version 0.1.0, independent of the spec) with an orchestrator that assigns by file, and an MCP scaffold (`spec/mcp/`) that turns a scan into those jobs. The companion, the personas, and the MCP server are not part of spec 0.3. The Amplitude plugin has not been run against Amplitude. The MCP adoption level is design-class. Drift detection was tested on fixtures only.
 - **Not built:** plugin discovery (how a surface declares a plugin), a common runner that calls each plugin's check, the notation-to-label mapping format, a generator that derives Fullstory element names or `data-fs-properties-schema` from a CardinalCollege, and a Fullstory drift check. The Fullstory plugin's `check.mjs` is a **stub**. The Fullstory plugin is **not in operation**. The Amplitude plugin derives track payloads from a property contract; that derivation was not run against Amplitude.
 - **The proof case** is the CarGo demo app (web, iOS, Android) as one multi-modal CardinalCollege. Its CardinalCollege does not exist yet. A plugin must be hardened against a real CardinalCollege before it is applied to a real surface.
 - **Fullstory claims are untested.** The plugin's `plugin.json` lists each claim with its evidence class. None is `tested`. Whether a rename preserves history, whether a Compose element can be named, whether the Fullstory name should equal the notation, and whether a property contract should become `data-fs-properties-schema` are open. The last of those is design, written in `spec/plugins/fullstory/property-schema.md`.
