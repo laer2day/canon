@@ -1,0 +1,21 @@
+{
+  "id": "checker-maintainer",
+  "version": "0.1.0",
+  "scope": "The rule checker and the runtime checker, including their known-bad inputs.",
+  "owns": ["src/lib/check.ts", "runtime/check.mjs", "runtime/check.test.mjs"],
+  "does": [
+    "Show a known-bad input fail before a check is trusted.",
+    "Keep exit 2 as did-not-run."
+  ],
+  "doesNot": [
+    "Treat exit 2 as a pass.",
+    "Silently read a pre-0.3 key."
+  ],
+  "claims": [
+    {
+      "text": "Work that does not set badInputShown, or that names a missing test file, fails.",
+      "evidence": "tested",
+      "where": "scripts/personas.test.mjs"
+    }
+  ]
+}
