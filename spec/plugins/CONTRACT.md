@@ -1,6 +1,8 @@
 # Canon plugin contract
 
-**Status:** Draft 0.1, non-normative. It does not change the specification (draft 0.2) or `canon.schema.json`. The specification changes only by a new version of that document (§10), so promoting this contract into the specification is a separate step that is not taken here.
+**Status:** Draft 0.2, non-normative. It does not change the specification (draft 0.3) or `canon.schema.json`. The specification changes only by a new version of that document (§10), so promoting this contract into the specification is a separate step that is not taken here.
+
+Draft 0.2 adds one rule: a plugin may read a property contract that sits beside a CardinalCollege. It still must not add a field to the CardinalCollege. The companion that defines that contract is [../property-enrichment.md](../property-enrichment.md) (companion draft 0.1, itself non-normative). Manifests written against this draft say `"contract": "0.2"`.
 
 ## What a plugin is
 
@@ -63,7 +65,8 @@ Exit 2 is **never** a pass. An unknown, unreadable or unimplemented check fails 
 
 ## What a plugin must not do
 
-- Edit a canon, or require a field in a canon that `canon.schema.json` does not allow.
+- Edit a CardinalCollege, or require a field in a CardinalCollege that `canon.schema.json` does not allow. A property contract is a sibling file. It is not a way around the closed schema.
+- Invent a vendor property name. Property names are copied from the property contract. A name that is not in the contract is drift.
 - Put personal data in anything it derives (spec §6).
 - Store a secret in the repository. A live layer that needs a credential must take it from the environment of whoever runs it.
 - Modify anything in the vendor's system from a check. A check is read-only.

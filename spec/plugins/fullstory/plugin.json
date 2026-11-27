@@ -1,6 +1,6 @@
 {
   "plugin": "fullstory",
-  "contract": "0.1",
+  "contract": "0.2",
   "vendor": "Fullstory",
   "derives": ["element-name", "property-schema", "page-name"],
   "platforms": ["web", "ios", "android"],
@@ -69,6 +69,11 @@
       "text": "Renaming an element does not break saved searches, metrics or dashboards.",
       "evidence": "design",
       "where": "undocumented and untested; a non-production test is required"
+    },
+    {
+      "text": "A property contract can be derived into data-fs-properties-schema. No generator does this, and the check does not verify it.",
+      "evidence": "design",
+      "where": "spec/plugins/fullstory/property-schema.md; the check is still a stub"
     }
   ]
 }

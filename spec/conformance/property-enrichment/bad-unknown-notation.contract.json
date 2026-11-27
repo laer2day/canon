@@ -1,0 +1,19 @@
+{
+  "contractVersion": "0.1.0",
+  "college": "meridian",
+  "collegeVersion": "0.1.0",
+  "cardinals": [
+    {
+      "notation": "meridian.card.not-a-cardinal",
+      "properties": [
+        {
+          "name": "price",
+          "type": "number",
+          "scope": "element",
+          "source": "attribute",
+          "privacy": "public"
+        }
+      ]
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 # Canon plugin: Fullstory binding
 
-**Status:** Draft, non-normative. Does not change the specification (draft 0.2).
+**Status:** Draft, non-normative. Does not change the specification (draft 0.3).
 **Applies to:** surfaces that emit a canon and also run Fullstory (web, iOS, Android).
 **Source of Fullstory guidance:** [fullstorydev/fs-skills](https://github.com/fullstorydev/fs-skills) (skills `fullstory-element-properties`, `fullstory-stable-selectors`, `fullstory-page-properties`, `universal-data-scoping-and-decoration`, `mobile-instrumentation-orchestrator`). Read at the time of writing; re-check before relying on any API detail.
 
@@ -100,3 +100,7 @@ These are examples of what this plugin has to cope with, taken from the CarGo de
 2. **Definitions that do not use `data-fs-element` at all.** Some element definitions in the demo org are keyed to an id or a role selector instead. *What it shows the plugin:* a drift check that looks only at `data-fs-element` will miss definitions that depend on a surface's ids and roles. Path A step A2 (finding dependents) has to include them.
 3. **A specific name that a helper may overwrite.** One JSX-level name in the booking form is defined in the demo org, and the form helper may replace it with the generic name after the component mounts. *What it shows the plugin:* a definition existing says nothing about which value is on the element at runtime. Settling that needs a session, not a search. This is the same "one property, two sources" shape as two iOS controls whose storyboard and code set different identifiers.
 4. **A live reader is weaker than a static check.** The search tool returns one `name` field per element, with no separate display name. *What it shows the plugin:* a live check through this tool can confirm that a named element exists but cannot check a notation-to-display-name mapping. The plugin's `check` entry point (see `check.mjs`, currently a stub) should treat the live layer as optional and weaker.
+
+## 9. Property schema (not built)
+
+Section 2 shows one hand-written schema entry for the instance property. That is emission of a known attribute. It is not a rule that creates `data-fs-properties-schema` from a property contract. [property-schema.md](property-schema.md) is a design proposal for that rule. It is not implemented, the check is still a stub, and nothing in it is established.

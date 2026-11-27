@@ -1,0 +1,10 @@
+{
+  "id": "good-page",
+  "payload": {
+    "event_type": "canon:page",
+    "event_properties": {
+      "canon": "meridian@0.1.0",
+      "section": "Primary"
+    }
+  }
+}
