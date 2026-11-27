@@ -134,8 +134,8 @@ export function Studio() {
     if (!capability) return;
     const selected = resolvePart(selectedKey, localeId);
     const match = PLACEMENTS.find((item) => item.notation === notation);
-    if (!match && selected.concept.notation !== notation) return;
-    const key = selected.concept.notation === notation ? selected.key : placementKey(match!);
+    if (!match && selected.cardinal.notation !== notation) return;
+    const key = selected.cardinal.notation === notation ? selected.key : placementKey(match!);
     const target = resolvePart(key, localeId);
     const description = descriptionFor(target, localeKnown);
     setSelectedKey(key);
@@ -305,7 +305,7 @@ export function Studio() {
             <HeadlessTools
               localeId={localeId}
               localeKnown={localeKnown}
-              selectedNotation={part.concept.notation}
+              selectedNotation={part.cardinal.notation}
               onCall={callTool}
             />
           ) : (
@@ -381,12 +381,12 @@ export function Studio() {
 
           <dl className="mb-4 grid grid-cols-[7.5rem_minmax(0,1fr)] gap-x-3 gap-y-1 font-mono text-xs">
             <dt className="text-mute">cardinality</dt>
-            <dd className="text-bone">{part.concept.cardinality}</dd>
+            <dd className="text-bone">{part.cardinal.cardinality}</dd>
             <dt className="text-mute">notation</dt>
-            <dd className="text-bone break-all">{part.concept.notation}</dd>
+            <dd className="text-bone break-all">{part.cardinal.notation}</dd>
             <dt className="text-mute">instance</dt>
             <dd className="text-bone break-all">
-              {part.placement.instanceId ?? (part.concept.ephemeral ? "omitted" : "none")}
+              {part.placement.instanceId ?? (part.cardinal.ephemeral ? "omitted" : "none")}
             </dd>
             <dt className="text-mute">type label</dt>
             <dd className="text-bone">{part.typeLabel.label}</dd>
@@ -407,7 +407,7 @@ export function Studio() {
             ))}
           </ul>
 
-          {part.concept.element === "a" && part.concept.role === "button" ? (
+          {part.cardinal.element === "a" && part.cardinal.role === "button" ? (
             <p className="mb-3 text-sm text-mute">The HTML element is an anchor. The canon role is button. Consumers share the notation, not the tag.</p>
           ) : null}
 
@@ -454,7 +454,7 @@ function HeadlessTools({
       {CAPABILITIES.map((capability) => {
         const sample = PLACEMENTS.find((item) => item.notation === capability.notation);
         const resolved = sample ? resolvePart(placementKey(sample), localeId) : null;
-        const description = resolved ? (localeKnown ? resolved.typeLabel.label : resolved.concept.labels.en) : capability.name;
+        const description = resolved ? (localeKnown ? resolved.typeLabel.label : resolved.cardinal.labels.en) : capability.name;
         const active = selectedNotation === capability.notation;
         return (
           <li key={capability.name} className={clsx("flex flex-col gap-2 p-3 sm:flex-row sm:items-center sm:justify-between", active ? "bg-ink-3" : "bg-ink")}>

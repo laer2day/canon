@@ -164,12 +164,12 @@ describe("strictDeclared agrees with the canon schema's prefix rule", () => {
     }
   });
 
-  it("every real prefix in spec/canons passes the strict reader", () => {
-    const meridian = JSON.parse(readFileSync(join(root, "spec/canons/meridian.json"), "utf8"));
-    const r = strictDeclared(`${meridian.prefix}@${meridian.canon}`);
+  it("every real prefix in spec/cardinal-colleges passes the strict reader", () => {
+    const meridian = JSON.parse(readFileSync(join(root, "spec/cardinal-colleges/meridian.json"), "utf8"));
+    const r = strictDeclared(`${meridian.prefix}@${meridian.version}`);
     assert.equal(r.ok, true, JSON.stringify(r));
     assert.equal(r.prefix, meridian.prefix);
-    assert.equal(r.version, meridian.canon);
+    assert.equal(r.version, meridian.version);
   });
 });
 

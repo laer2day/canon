@@ -22,6 +22,7 @@ if (!args.canon) {
 }
 
 const canon = await loadCanon(args.canon);
+refuseOldShape(canon, args.canon);
 const html = args.stdin ? readFileSync(0, "utf8") : await fetch(args.url).then((r) => r.text());
 const { observed, declared } = walkDom(html);
 const attestation = verify(canon, observed, declared, args.url ?? "stdin");
@@ -37,6 +38,29 @@ async function loadCanon(src) {
     ? await fetch(src).then((r) => r.text())
     : readFileSync(src, "utf8");
   return JSON.parse(text);
+}
+
+// A CardinalCollege uses `cardinals` and `version` (spec 0.3, $defs/cardinal). The pre-0.3 keys
+// `concepts` and top-level `canon` are not read. Exit 2: the check did not run. Never a pass.
+function refuseOldShape(doc, src) {
+  if (!doc || typeof doc !== "object" || Array.isArray(doc)) {
+    console.error(`runtime check did not run: ${src} is not a CardinalCollege object`);
+    process.exit(2);
+  }
+  if (Object.hasOwn(doc, "concepts") || Object.hasOwn(doc, "canon")) {
+    console.error(
+      `runtime check did not run: ${src} uses a pre-0.3 key (\`concepts\` or top-level \`canon\`). A CardinalCollege uses \`cardinals\` and \`version\`.`,
+    );
+    process.exit(2);
+  }
+  if (!Array.isArray(doc.cardinals)) {
+    console.error(`runtime check did not run: ${src} has no cardinals array`);
+    process.exit(2);
+  }
+  if (typeof doc.version !== "string" || doc.version.length === 0) {
+    console.error(`runtime check did not run: ${src} has no version`);
+    process.exit(2);
+  }
 }
 
 // ── DOM walker ──────────────────────────────────────────────────────────
@@ -98,7 +122,7 @@ function decodeEntities(s) {
 // ── verifier ────────────────────────────────────────────────────────────
 
 function verify(canon, observed, declared, surface) {
-  const conceptByNotation = new Map(canon.concepts.map((c) => [c.notation, c]));
+  const cardinalByNotation = new Map(canon.cardinals.map((c) => [c.notation, c]));
   const counts = new Map();
   for (const o of observed) counts.set(o.notation, (counts.get(o.notation) ?? 0) + 1);
 
@@ -112,22 +136,22 @@ function verify(canon, observed, declared, surface) {
   };
 
   for (const o of observed) {
-    const concept = conceptByNotation.get(o.notation);
-    if (o.notation === "" || !concept) {
+    const cardinal = cardinalByNotation.get(o.notation);
+    if (o.notation === "" || !cardinal) {
       bad(o.notation, "unknown_notation");
       continue;
     }
-    if (concept.deprecated) {
-      bad(o.notation, "deprecated_emitted", { replacedBy: concept.replacedBy });
+    if (cardinal.deprecated) {
+      bad(o.notation, "deprecated_emitted", { replacedBy: cardinal.replacedBy });
       continue;
     }
-    if (concept.namedBy === "aria" && !o.ariaLabel) {
+    if (cardinal.namedBy === "aria" && !o.ariaLabel) {
       bad(o.notation, "missing_attribute", { attribute: "aria-label" });
       continue;
     }
-    const label = labelFor(concept, o.instance);
+    const label = labelFor(cardinal, o.instance);
     const accessibleName = o.ariaLabel ?? o.visibleText;
-    if (concept.namedBy === "visible" && o.ariaLabel !== null && o.visibleText) {
+    if (cardinal.namedBy === "visible" && o.ariaLabel !== null && o.visibleText) {
       // Visible text already names the part: spec §2 says do not also set aria-label.
       // A label that does not even contain the visible text is worse: a divergent name.
       if (!o.ariaLabel.toLowerCase().includes(o.visibleText.toLowerCase())) {
@@ -144,15 +168,15 @@ function verify(canon, observed, declared, surface) {
     results.push({ notation: o.notation, status: "conforming" });
   }
 
-  for (const concept of canon.concepts) {
-    const n = counts.get(concept.notation) ?? 0;
+  for (const cardinal of canon.cardinals) {
+    const n = counts.get(cardinal.notation) ?? 0;
     // singletons observed more than once
-    if (concept.cardinality === "singleton" && n > 1) {
-      bad(concept.notation, "cardinality_mismatch", { expected: "singleton", observed: n });
+    if (cardinal.cardinality === "singleton" && n > 1) {
+      bad(cardinal.notation, "cardinality_mismatch", { expected: "singleton", observed: n });
     }
-    // repeating concepts with zero observations: note it, do not fail
-    if (concept.cardinality === "repeating" && n === 0 && !concept.ephemeral && !concept.deprecated) {
-      results.push({ notation: concept.notation, status: "absent", severity: "info" });
+    // repeating cardinals with zero observations: note it, do not fail
+    if (cardinal.cardinality === "repeating" && n === 0 && !cardinal.ephemeral && !cardinal.deprecated) {
+      results.push({ notation: cardinal.notation, status: "absent", severity: "info" });
     }
   }
 
@@ -166,23 +190,23 @@ function verify(canon, observed, declared, surface) {
 
   // Declared version (D-B). Absent meta is not a failure: a bare fragment has no document head.
   if (declared) {
-    const prefix = canon.prefix ?? canon.concepts[0]?.notation.split(".")[0] ?? null;
-    if (declared.version !== canon.canon || (declared.prefix !== null && prefix && declared.prefix !== prefix)) {
-      bad(declared.raw ?? "", "version_mismatch", { declared: declared.raw, expected: `${prefix}@${canon.canon}` });
+    const prefix = canon.prefix ?? canon.cardinals[0]?.notation.split(".")[0] ?? null;
+    if (declared.version !== canon.version || (declared.prefix !== null && prefix && declared.prefix !== prefix)) {
+      bad(declared.raw ?? "", "version_mismatch", { declared: declared.raw, expected: `${prefix}@${canon.version}` });
     }
   }
 
   const pass = flagged.length === 0;
   return {
-    canon: canon.prefix ?? canon.concepts[0]?.notation.split(".")[0] ?? null,
-    canonVersion: canon.canon ?? "unspecified",
+    canon: canon.prefix ?? canon.cardinals[0]?.notation.split(".")[0] ?? null,
+    canonVersion: canon.version,
     declaredVersion: declared ? declared.raw : null,
     surface,
     timestamp: new Date().toISOString(),
     pass,
     failClosed: args["fail-closed"],
     summary: {
-      conceptsDeclared: canon.concepts.length,
+      cardinalsDeclared: canon.cardinals.length,
       elementsObserved: observed.length,
       conforming: results.filter((r) => r.status === "conforming").length,
       flagged: flagged.length,
@@ -191,8 +215,8 @@ function verify(canon, observed, declared, surface) {
   };
 }
 
-function labelFor(concept, instanceId) {
+function labelFor(cardinal, instanceId) {
   return instanceId
-    ? concept.instances?.find((i) => i.id === instanceId)?.name?.en
-    : concept.prefLabel?.en;
+    ? cardinal.instances?.find((i) => i.id === instanceId)?.name?.en
+    : cardinal.prefLabel?.en;
 }

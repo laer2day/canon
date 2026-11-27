@@ -42,16 +42,16 @@ function Home() {
         </header>
 
         <section className="py-10 sm:py-14" aria-labelledby="thesis">
-          <p className="font-mono text-xs tracking-wide text-brass">Spec 0.2</p>
+          <p className="font-mono text-xs tracking-wide text-brass">Spec 0.3</p>
           <h1 id="thesis" className="mt-2 max-w-4xl font-serif text-4xl leading-tight text-bone sm:text-6xl">
             Notation, label, instance.
           </h1>
           <p className="mt-5 max-w-2xl text-lg text-mute">
-            A notation names the concept. A preferred label names it for people, in one language at a time. An instance identifier names a single occurrence. Web, iOS, Android, and headless emit that triple. No vendor owns it, and no package is required.
+            A notation names the cardinal. A preferred label names it for people, in one language at a time. An instance identifier names a single occurrence. Web, iOS, Android, and headless emit that triple. No vendor owns it, and no package is required.
           </p>
           <dl className="mt-8 grid gap-4 sm:grid-cols-3">
             <div className="border-t border-line pt-3">
-              <dt className="font-serif text-lg text-bone">Concept</dt>
+              <dt className="font-serif text-lg text-bone">Cardinal</dt>
               <dd className="mt-1 text-sm text-mute">meridian.card.plan. Prefixed, dotted, immutable, at most 50 characters.</dd>
             </div>
             <div className="border-t border-line pt-3">
@@ -60,7 +60,7 @@ function Home() {
             </div>
             <div className="border-t border-line pt-3">
               <dt className="font-serif text-lg text-bone">Instance</dt>
-              <dd className="mt-1 text-sm text-mute">meridian.card.plan#sku-growth. data-instance, not data-id. The accessible name, when the concept repeats.</dd>
+              <dd className="mt-1 text-sm text-mute">meridian.card.plan#sku-growth. data-instance, not data-id. The accessible name, when the cardinal repeats.</dd>
             </div>
           </dl>
         </section>
@@ -70,7 +70,7 @@ function Home() {
 
         <footer className="border-t border-line py-10">
           <p className="max-w-prose text-mute">
-            This is a reading of draft 0.1, not the specification itself. Meridian is fictional. Bindings in the emission panel are local examples. Conformance does not depend on them.
+            This is a reading of draft 0.3, not the specification itself. Meridian is fictional. Bindings in the emission panel are local examples. Conformance does not depend on them.
           </p>
           <p className="mt-3 font-mono text-xs text-mute">Missing labels fall back. They never leave the accessible name empty.</p>
         </footer>

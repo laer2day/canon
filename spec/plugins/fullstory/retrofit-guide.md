@@ -53,9 +53,9 @@ This step needs access to the Fullstory org and to the test code. If it cannot b
 
 ### A3. Draft the canon
 
-1. Group legacy names into concepts. Several legacy names for one thing become one notation. A name that mixes a type and an instance is split into a concept and an instance.
+1. Group legacy names into cardinals. Several legacy names for one thing become one notation. A name that mixes a type and an instance is split into a cardinal and an instance.
 2. Choose the prefix, default locale and locales.
-3. Declare cardinality per concept: `singleton` once per screen, `repeating` otherwise.
+3. Declare cardinality per cardinal: `singleton` once per screen, `repeating` otherwise.
 4. Take instance ids from the source of truth: record id, SKU or route id. Never from visible text or position.
 5. For one product on several surfaces, write a single canon. The same entity carries the same instance id on every surface (spec §1.3).
 6. Mark ephemeral lists (`ephemeral: true`) and user-owned records. Neither gets an instance id.

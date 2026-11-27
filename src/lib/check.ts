@@ -14,7 +14,7 @@ export type CanonInstance = {
   detail?: Labels;
 };
 
-export type CanonConcept = {
+export type CanonCardinal = {
   notation: string;
   cardinality: "singleton" | "repeating";
   namedBy?: NamedBy;
@@ -26,12 +26,12 @@ export type CanonConcept = {
 };
 
 export type CanonFile = {
-  canon: string;
+  version: string;
   prefix: string;
   defaultLocale: string;
   locales: CanonLocale[];
   capabilities?: { name: string; notation: string }[];
-  concepts: CanonConcept[];
+  cardinals: CanonCardinal[];
 };
 
 export type SurfacePart = {
@@ -83,8 +83,8 @@ export function instanceOk(id: string): boolean {
   return id.length > 0 && id.length <= 50 && SEGMENT.test(id);
 }
 
-export function conceptOf(canon: CanonFile, notation: string): CanonConcept | undefined {
-  return canon.concepts.find((concept) => concept.notation === notation);
+export function cardinalOf(canon: CanonFile, notation: string): CanonCardinal | undefined {
+  return canon.cardinals.find((cardinal) => cardinal.notation === notation);
 }
 
 export type ResolvedName = {
@@ -117,52 +117,60 @@ export function resolveLabels(canon: CanonFile, labels: Labels, requested: strin
   };
 }
 
-export function policySource(concept: CanonConcept, instanceId: string | null, names?: Labels): Labels {
-  if (concept.cardinality === "singleton") return concept.prefLabel;
+export function policySource(cardinal: CanonCardinal, instanceId: string | null, names?: Labels): Labels {
+  if (cardinal.cardinality === "singleton") return cardinal.prefLabel;
   if (instanceId) {
-    const instance = concept.instances?.find((item) => item.id === instanceId);
+    const instance = cardinal.instances?.find((item) => item.id === instanceId);
     if (!instance) return { en: "" };
     return instance.name;
   }
-  return names ?? concept.prefLabel;
+  return names ?? cardinal.prefLabel;
 }
 
 export function validateCanon(canon: CanonFile): string[] {
   const errors: string[] = [];
-  if (!canon.canon) errors.push("Canon version is missing.");
+  const record = canon as CanonFile & { canon?: unknown; concepts?: unknown };
+  if (Object.prototype.hasOwnProperty.call(record, "canon") || Object.prototype.hasOwnProperty.call(record, "concepts")) {
+    errors.push("Pre-0.3 keys `canon` and `concepts` are not read. Use `version` and `cardinals`.");
+  }
+  if (!canon.version) errors.push("CardinalCollege version is missing.");
+  if (!Array.isArray(canon.cardinals)) {
+    errors.push("CardinalCollege has no cardinals.");
+    return errors;
+  }
   if (!canon.locales.some((locale) => locale.tag === canon.defaultLocale)) {
     errors.push("Default locale is not declared.");
   }
   const seen = new Set<string>();
-  for (const concept of canon.concepts) {
-    if (seen.has(concept.notation)) errors.push(`Duplicate notation ${concept.notation}.`);
-    seen.add(concept.notation);
-    if (!notationOk(concept.notation, canon.prefix)) errors.push(`Illegal notation ${concept.notation}.`);
-    if (!concept.prefLabel?.en) errors.push(`${concept.notation} has no default-locale label.`);
-    if (concept.cardinality === "singleton" && concept.instances?.length) {
-      errors.push(`${concept.notation} is singleton and must not declare instances.`);
+  for (const cardinal of canon.cardinals) {
+    if (seen.has(cardinal.notation)) errors.push(`Duplicate notation ${cardinal.notation}.`);
+    seen.add(cardinal.notation);
+    if (!notationOk(cardinal.notation, canon.prefix)) errors.push(`Illegal notation ${cardinal.notation}.`);
+    if (!cardinal.prefLabel?.en) errors.push(`${cardinal.notation} has no default-locale label.`);
+    if (cardinal.cardinality === "singleton" && cardinal.instances?.length) {
+      errors.push(`${cardinal.notation} is singleton and must not declare instances.`);
     }
-    if (concept.cardinality === "repeating" && !concept.ephemeral && !concept.instances?.length && !concept.deprecated) {
-      errors.push(`${concept.notation} repeats and has no instances.`);
+    if (cardinal.cardinality === "repeating" && !cardinal.ephemeral && !cardinal.instances?.length && !cardinal.deprecated) {
+      errors.push(`${cardinal.notation} repeats and has no instances.`);
     }
     const ids = new Set<string>();
-    for (const instance of concept.instances ?? []) {
-      if (!instanceOk(instance.id)) errors.push(`Illegal instance ${concept.notation}#${instance.id}.`);
-      if (ids.has(instance.id)) errors.push(`Reused instance ${instance.id} on ${concept.notation}.`);
+    for (const instance of cardinal.instances ?? []) {
+      if (!instanceOk(instance.id)) errors.push(`Illegal instance ${cardinal.notation}#${instance.id}.`);
+      if (ids.has(instance.id)) errors.push(`Reused instance ${instance.id} on ${cardinal.notation}.`);
       ids.add(instance.id);
-      if (!instance.name.en) errors.push(`${concept.notation}#${instance.id} has no default-locale name.`);
+      if (!instance.name.en) errors.push(`${cardinal.notation}#${instance.id} has no default-locale name.`);
     }
-    if (concept.deprecated && !concept.replacedBy) errors.push(`${concept.notation} is deprecated without replacedBy.`);
+    if (cardinal.deprecated && !cardinal.replacedBy) errors.push(`${cardinal.notation} is deprecated without replacedBy.`);
   }
-  for (const concept of canon.concepts) {
-    if (!concept.deprecated || !concept.replacedBy) continue;
-    const next = conceptOf(canon, concept.replacedBy);
-    if (!next) errors.push(`${concept.notation} replacedBy ${concept.replacedBy} does not exist.`);
-    else if (next.deprecated) errors.push(`${concept.notation} is replaced by a deprecated notation.`);
-    if (concept.replacedBy === concept.notation) errors.push(`${concept.notation} replaces itself.`);
+  for (const cardinal of canon.cardinals) {
+    if (!cardinal.deprecated || !cardinal.replacedBy) continue;
+    const next = cardinalOf(canon, cardinal.replacedBy);
+    if (!next) errors.push(`${cardinal.notation} replacedBy ${cardinal.replacedBy} does not exist.`);
+    else if (next.deprecated) errors.push(`${cardinal.notation} is replaced by a deprecated notation.`);
+    if (cardinal.replacedBy === cardinal.notation) errors.push(`${cardinal.notation} replaces itself.`);
   }
   for (const capability of canon.capabilities ?? []) {
-    if (!conceptOf(canon, capability.notation)) errors.push(`Capability ${capability.name} points at an unknown notation.`);
+    if (!cardinalOf(canon, capability.notation)) errors.push(`Capability ${capability.name} points at an unknown notation.`);
   }
   return errors;
 }
@@ -172,36 +180,36 @@ export function personalData(value: string): boolean {
 }
 
 export function audit(canon: CanonFile, emission: Emission, parts: SurfacePart[]): Check[] {
-  const concept = conceptOf(canon, emission.notation);
+  const cardinal = cardinalOf(canon, emission.notation);
   const checks: Check[] = [];
   const legal = notationOk(emission.notation, canon.prefix);
   checks.push({
     id: "notation",
-    pass: legal && Boolean(concept),
-    detail: legal && concept ? `${emission.notation} · ${emission.notation.length}/50` : "Notation fails grammar, prefix, length, or is not in the canon.",
+    pass: legal && Boolean(cardinal),
+    detail: legal && cardinal ? `${emission.notation} · ${emission.notation.length}/50` : "Notation fails grammar, prefix, length, or is not in the CardinalCollege.",
   });
 
-  const deprecatedHit = parts.some((part) => conceptOf(canon, part.notation)?.deprecated);
+  const deprecatedHit = parts.some((part) => cardinalOf(canon, part.notation)?.deprecated);
   checks.push({
     id: "deprecated",
-    pass: !concept?.deprecated && !deprecatedHit,
-    detail: concept?.deprecated
+    pass: !cardinal?.deprecated && !deprecatedHit,
+    detail: cardinal?.deprecated
       ? `${emission.notation} is deprecated. It is not renamed and must not be emitted.`
       : deprecatedHit
         ? "A deprecated notation is on the page."
         : "Deprecated notations are absent. None were reused.",
   });
 
-  if (!concept) {
-    checks.push({ id: "instance", pass: false, detail: "No concept to check." });
-  } else if (concept.cardinality === "singleton") {
-    const count = parts.filter((part) => part.notation === concept.notation).length;
+  if (!cardinal) {
+    checks.push({ id: "instance", pass: false, detail: "No cardinal to check." });
+  } else if (cardinal.cardinality === "singleton") {
+    const count = parts.filter((part) => part.notation === cardinal.notation).length;
     checks.push({
       id: "instance",
       pass: count === 1 && emission.instance == null,
       detail: count === 1 ? "Singleton. One occurrence. No instance identifier." : `Singleton occurs ${count} times on this page.`,
     });
-  } else if (concept.ephemeral) {
+  } else if (cardinal.ephemeral) {
     checks.push({
       id: "instance",
       pass: emission.instance == null && emission.rank != null,
@@ -212,11 +220,11 @@ export function audit(canon: CanonFile, emission: Emission, parts: SurfacePart[]
     });
   } else {
     const id = emission.instance ?? "";
-    const known = concept.instances?.some((item) => item.id === id) ?? false;
+    const known = cardinal.instances?.some((item) => item.id === id) ?? false;
     checks.push({
       id: "instance",
       pass: instanceOk(id) && known,
-      detail: instanceOk(id) && known ? `${concept.notation}#${id} · from a record` : "Instance id is missing, illegal, or not in the canon.",
+      detail: instanceOk(id) && known ? `${cardinal.notation}#${id} · from a record` : "Instance id is missing, illegal, or not in the CardinalCollege.",
     });
   }
 
@@ -265,8 +273,8 @@ export function audit(canon: CanonFile, emission: Emission, parts: SurfacePart[]
 
   checks.push({
     id: "version",
-    pass: emission.version.length > 0 && emission.version === canon.canon,
-    detail: emission.version === canon.canon ? `Surface declares canon ${emission.version}.` : `Surface says ${emission.version || "nothing"}. Canon is ${canon.canon}.`,
+    pass: emission.version.length > 0 && emission.version === canon.version,
+    detail: emission.version === canon.version ? `Surface declares CardinalCollege ${emission.version}.` : `Surface says ${emission.version || "nothing"}. CardinalCollege is ${canon.version}.`,
   });
 
   const scanned = [emission.visible, emission.accessibleName, emission.ariaLabel, emission.description, emission.instance, ...emission.extra].filter(
@@ -292,7 +300,7 @@ export function audit(canon: CanonFile, emission: Emission, parts: SurfacePart[]
 
 export function emissionFor(options: {
   canon: CanonFile;
-  concept: CanonConcept;
+  cardinal: CanonCardinal;
   instance: string | null;
   rank?: number | null;
   names?: Labels;
@@ -303,15 +311,15 @@ export function emissionFor(options: {
   description: string | null;
   labelledBy?: string | null;
 }): Emission {
-  const name = resolveLabels(options.canon, policySource(options.concept, options.instance, options.names), options.locale);
+  const name = resolveLabels(options.canon, policySource(options.cardinal, options.instance, options.names), options.locale);
   const page = options.canon.locales.find((item) => item.tag === options.locale) ?? options.canon.locales[0];
   const pageLang = page?.tag ?? options.locale;
   const pageDir = page?.dir ?? "ltr";
   const headless = options.surface === "headless";
-  const namedBy = options.concept.namedBy ?? "visible";
+  const namedBy = options.cardinal.namedBy ?? "visible";
   const visible = headless || namedBy === "aria" ? null : name.label;
   return {
-    notation: options.concept.notation,
+    notation: options.cardinal.notation,
     instance: options.instance,
     rank: options.rank ?? null,
     visible,
@@ -325,7 +333,7 @@ export function emissionFor(options: {
     nameLang: name.lang,
     nameDir: name.dir,
     interactionType: options.interactionType,
-    version: options.canon.canon,
+    version: options.canon.version,
     description: options.description,
     surface: options.surface,
     extra: options.extra ?? [],

@@ -49,7 +49,7 @@ A surface should say where its canon is published so a visiting agent can resolv
 
 ## What is enforced today, and what is not
 
-**Enforced** (runtime checker, `runtime/check.test.mjs`): a declared version that differs from the canon is flagged `version_mismatch`; a matching one passes. Run against a one-concept canon, the checker's results were: correct marker passes (exit 0); a wrong version or a wrong prefix fails (exit 1); a bare version with no prefix passes; an **empty** `content=""` fails (exit 1), so an empty marker is not the same as no marker; and **no marker at all passes** (exit 0, `declaredVersion: null`).
+**Enforced** (runtime checker, `runtime/check.test.mjs`): a declared version that differs from the CardinalCollege `version` is flagged `version_mismatch`; a matching one passes. Run against a CardinalCollege fixture (`cardinals` and `version`, not the pre-0.3 keys), the checker's results were: correct marker passes (exit 0); a wrong version or a wrong prefix fails (exit 1); a bare version with no prefix passes; an **empty** `content=""` fails (exit 1), so an empty marker is not the same as no marker; and **no marker at all passes** (exit 0, `declaredVersion: null`). A document that still uses `concepts` or a top-level `canon` field does not run (exit 2).
 
 **Not enforced, and a known gap:**
 

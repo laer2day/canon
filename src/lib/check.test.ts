@@ -20,7 +20,7 @@ function readJson<T>(path: string): T {
   return JSON.parse(readFileSync(new URL(path, specRoot), "utf8")) as T;
 }
 
-const canon = readJson<CanonFile>("canons/meridian.json");
+const canon = readJson<CanonFile>("cardinal-colleges/meridian.json");
 const home = readJson<{ parts: SurfacePart[] }>("surfaces/meridian-home.json");
 
 type ExpectedName = {
@@ -49,12 +49,22 @@ describe("canon document", () => {
     assert.deepEqual(validateCanon(canon), []);
   });
 
+  it("rejects a pre-0.3 document that still uses concepts and canon", () => {
+    const old = { ...canon, canon: canon.version, concepts: canon.cardinals } as CanonFile;
+    delete (old as { version?: string }).version;
+    delete (old as { cardinals?: CanonFile["cardinals"] }).cardinals;
+    const errors = validateCanon(old);
+    assert.ok(errors.some((error) => error.includes("cardinals")));
+    assert.ok(errors.some((error) => error.includes("version")));
+    assert.ok(errors.some((error) => error.includes("concepts")));
+  });
+
   it("rejects a reused notation and a singleton with instances", () => {
     const broken: CanonFile = {
       ...canon,
-      concepts: [
-        ...canon.concepts,
-        { ...canon.concepts[0], instances: [{ id: "nope", stability: "record", name: { en: "Nope" } }] },
+      cardinals: [
+        ...canon.cardinals,
+        { ...canon.cardinals[0], instances: [{ id: "nope", stability: "record", name: { en: "Nope" } }] },
       ],
     };
     const errors = validateCanon(broken);
@@ -68,9 +78,9 @@ describe("meridian home", () => {
     const expected = readJson<ExpectedName[]>("conformance/expected/home-en.json");
     assert.equal(expected.length, home.parts.length);
     home.parts.forEach((part, index) => {
-      const concept = canon.concepts.find((item) => item.notation === part.notation);
-      assert.ok(concept);
-      const resolved = resolveLabels(canon, policySource(concept, part.instance, part.names), "en");
+      const cardinal = canon.cardinals.find((item) => item.notation === part.notation);
+      assert.ok(cardinal);
+      const resolved = resolveLabels(canon, policySource(cardinal, part.instance, part.names), "en");
       const row = expected[index];
       assert.equal(row.notation, part.notation);
       assert.equal(row.instance, part.instance);
@@ -81,7 +91,7 @@ describe("meridian home", () => {
       assert.equal(resolved.fellBack, row.fellBack);
       const emission = emissionFor({
         canon,
-        concept,
+        cardinal,
         instance: part.instance,
         rank: part.rank ?? null,
         names: part.names,
@@ -102,15 +112,15 @@ describe("meridian home", () => {
       elementLang: string;
       elementDir: null;
     }>("conformance/expected/enterprise-ja.json");
-    const concept = canon.concepts.find((item) => item.notation === "meridian.card.plan");
-    assert.ok(concept);
-    const resolved = resolveLabels(canon, policySource(concept, "sku-enterprise"), "ja");
+    const cardinal = canon.cardinals.find((item) => item.notation === "meridian.card.plan");
+    assert.ok(cardinal);
+    const resolved = resolveLabels(canon, policySource(cardinal, "sku-enterprise"), "ja");
     assert.equal(resolved.label, expected.accessibleName);
     assert.equal(resolved.lang, expected.lang);
     assert.equal(resolved.fellBack, expected.fellBack);
     const emission = emissionFor({
       canon,
-      concept,
+      cardinal,
       instance: "sku-enterprise",
       locale: "ja",
       surface: "web",
@@ -133,19 +143,19 @@ describe("conformance fixtures", () => {
 
   for (const fixture of fixtures) {
     it(`${fixture.id} fails ${fixture.expectFail.join(", ")}`, () => {
-      const concept = canon.concepts.find((item) => item.notation === fixture.notation);
-      assert.ok(concept, fixture.notation);
+      const cardinal = canon.cardinals.find((item) => item.notation === fixture.notation);
+      assert.ok(cardinal, fixture.notation);
       const surfacePart = home.parts.find((part) => part.notation === fixture.notation && part.instance === fixture.instance);
       const emission = emissionFor({
         canon,
-        concept,
+        cardinal,
         instance: fixture.instance,
         rank: surfacePart?.rank ?? null,
         names: surfacePart?.names,
         locale: fixture.locale,
         surface: fixture.surface,
         interactionType: fixture.surface === "headless" ? "mcp-tool-call" : null,
-        description: fixture.surface === "headless" ? concept.prefLabel.en : null,
+        description: fixture.surface === "headless" ? cardinal.prefLabel.en : null,
       });
       const patched = { ...emission, ...fixture.patch };
       const parts = fixture.extraParts ? [...home.parts, ...fixture.extraParts] : home.parts;
